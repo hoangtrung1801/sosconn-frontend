@@ -15,12 +15,18 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
   -moz-osx-font-smoothing: grayscale;
 }
@@ -63,6 +69,7 @@
 }
 
 @keyframes ringPulse {
+
   0%,
   100% {
     opacity: 0.2;
@@ -177,6 +184,10 @@ h1 {
   }
 }
 
+#root {
+  width: 100vw;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -187,4 +198,3 @@ h1 {
     font-family: "Be Vietnam Pro", sans-serif;
   }
 }
-

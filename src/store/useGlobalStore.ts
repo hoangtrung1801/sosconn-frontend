@@ -6,8 +6,7 @@ export interface GlobalStore extends GlobalState {}
 
 const initialState: Pick<GlobalStore, keyof GlobalState> = {};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const useGlobalStore = create<GlobalStore>((set) => ({
+const useGlobalStore = create<GlobalStore>(() => ({
   ...initialState,
 }));
 
