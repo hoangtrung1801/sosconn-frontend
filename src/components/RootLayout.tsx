@@ -1,10 +1,12 @@
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
 
 export default function RootLayout() {
+  const navigate = useNavigate();
+
   const handleNavItemClick = (href: string) => {
-    // Handle navigation - you can integrate with TanStack Router navigation here
-    console.log("Navigate to:", href);
+    // Handle navigation with TanStack Router
+    navigate({ to: href });
   };
 
   const handleInfoItemClick = (item: string) => {
