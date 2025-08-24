@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,12 @@ export const ChatbotWidget: React.FC = () => {
     },
   ]);
   const [inputValue, setInputValue] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto scroll to bottom when new message arrives
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   // Handle sending message
   const handleSendMessage = () => {
@@ -81,7 +87,7 @@ export const ChatbotWidget: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed bottom-20 right-4 z-50 w-80 h-96"
+            className="fixed bottom-20 right-4 z-50 w-80 h-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-8rem)]"
           >
             <Card className="h-full shadow-2xl border-blue-200">
               {/* Header */}
@@ -110,8 +116,8 @@ export const ChatbotWidget: React.FC = () => {
               </CardHeader>
 
               {/* Messages */}
-              <CardContent className="p-0 flex flex-col h-full">
-                <ScrollArea className="flex-1 p-3">
+              <CardContent className="p-0 flex flex-col" style={{ height: 'calc(100% - 60px)' }}>
+                <ScrollArea className="flex-1 p-3" style={{ height: 'calc(100% - 70px)' }}>
                   <div className="space-y-3">
                     {messages.map((message) => (
                       <motion.div
@@ -121,33 +127,35 @@ export const ChatbotWidget: React.FC = () => {
                         className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
-                          className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
+                          className={`max-w-[200px] px-3 py-2 rounded-lg text-sm break-words ${
                             message.type === 'user'
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-100 text-gray-800'
+                              ? 'bg-blue-500 text-white rounded-br-sm'
+                              : 'bg-gray-100 text-gray-800 rounded-bl-sm'
                           }`}
                         >
                           {message.content}
                         </div>
                       </motion.div>
                     ))}
+                    <div ref={messagesEndRef} />
                   </div>
                 </ScrollArea>
 
                 {/* Input */}
-                <div className="p-3 border-t border-gray-200">
+                <div className="p-3 border-t border-gray-200 bg-white">
                   <div className="flex space-x-2">
                     <Input
                       placeholder="Nhập tin nhắn..."
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="flex-1"
+                      className="flex-1 text-sm"
                     />
                     <Button
                       size="icon"
-                      className="bg-blue-500 hover:bg-blue-600"
+                      className="h-9 w-9 bg-blue-500 hover:bg-blue-600 shrink-0"
                       onClick={handleSendMessage}
+                      disabled={inputValue.trim() === ''}
                     >
                       <Send className="h-4 w-4" />
                     </Button>
