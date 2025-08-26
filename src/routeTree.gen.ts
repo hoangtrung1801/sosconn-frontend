@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as EopIndexRouteImport } from './routes/eop/index'
 import { Route as EopReportRouteImport } from './routes/eop/report'
 import { Route as EopEditRouteImport } from './routes/eop/edit'
 import { Route as EopCreateRouteImport } from './routes/eop/create'
@@ -23,6 +24,11 @@ const HomeRoute = HomeRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EopIndexRoute = EopIndexRouteImport.update({
+  id: '/eop/',
+  path: '/eop/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EopReportRoute = EopReportRouteImport.update({
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
+  '/eop': typeof EopIndexRoute
 }
 export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
+  '/eop': typeof EopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +70,7 @@ export interface FileRoutesById {
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
+  '/eop/': typeof EopIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,8 +80,15 @@ export interface FileRouteTypes {
     | '/eop/create'
     | '/eop/edit'
     | '/eop/report'
+    | '/eop'
   fileRoutesByTo: FileRoutesByTo
-  to: '/community' | '/home' | '/eop/create' | '/eop/edit' | '/eop/report'
+  to:
+    | '/community'
+    | '/home'
+    | '/eop/create'
+    | '/eop/edit'
+    | '/eop/report'
+    | '/eop'
   id:
     | '__root__'
     | '/community'
@@ -80,6 +96,7 @@ export interface FileRouteTypes {
     | '/eop/create'
     | '/eop/edit'
     | '/eop/report'
+    | '/eop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -88,6 +105,7 @@ export interface RootRouteChildren {
   EopCreateRoute: typeof EopCreateRoute
   EopEditRoute: typeof EopEditRoute
   EopReportRoute: typeof EopReportRoute
+  EopIndexRoute: typeof EopIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eop/': {
+      id: '/eop/'
+      path: '/eop'
+      fullPath: '/eop'
+      preLoaderRoute: typeof EopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eop/report': {
@@ -136,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   EopCreateRoute: EopCreateRoute,
   EopEditRoute: EopEditRoute,
   EopReportRoute: EopReportRoute,
+  EopIndexRoute: EopIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

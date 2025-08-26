@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { FileText, Download, Clock, CheckCircle, User, Calendar, MapPin, AlertTriangle, Search, Filter, MoreVertical, ChevronUp, ChevronDown } from "lucide-react"
+import { getMockEOPReportById } from "@/lib/mock-data/eop-data"
 import type { EOPReport, EOPTask } from "@/types"
 
 const priorityColors = {
@@ -58,6 +59,17 @@ export default function ReportDisplayPage() {
     if (storedReport) {
       const parsedReport = JSON.parse(storedReport) as EOPReport
       setReport(parsedReport)
+    } else {
+      // Fallback: try to get from URL params and load from mock data
+      const urlParams = new URLSearchParams(window.location.search)
+      const reportId = urlParams.get('reportId')
+      if (reportId) {
+        const mockReport = getMockEOPReportById(reportId)
+        if (mockReport) {
+          setReport(mockReport)
+          sessionStorage.setItem('finalEOPReport', JSON.stringify(mockReport))
+        }
+      }
     }
   }, [])
 
@@ -90,10 +102,11 @@ export default function ReportDisplayPage() {
       let comparison = 0
       
       switch (sortBy) {
-        case "priority":
+        case "priority": {
           const priorityOrder = { high: 3, medium: 2, low: 1 }
           comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
           break
+        }
         case "deadline":
           comparison = new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
           break

@@ -1,5 +1,6 @@
 // import request from "@/lib/http"
 import type { CreateEOPRequest, EOPReport, GenerateEOPResponse, ConfirmEOPRequest } from "@/types/eop.type"
+import { getMockEOPReports } from "@/lib/mock-data/eop-data"
 
 export const URL_GENERATE_EOP = "/eop/generate"
 export const URL_CONFIRM_EOP = "/eop/confirm"
@@ -168,6 +169,24 @@ const eopApi = {
       // return response.data
     } catch (error) {
       console.error("Error confirming EOP:", error)
+      throw error
+    }
+  },
+
+  async getEOPReports(): Promise<{ reports: EOPReport[] }> {
+    try {
+      // Mock implementation for development
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Return comprehensive mock data
+      const reports = getMockEOPReports()
+      return { reports }
+      
+      // Real API call would be:
+      // const response = await request.get<{ reports: EOPReport[] }>('/eop/reports')
+      // return response.data
+    } catch (error) {
+      console.error("Error fetching EOP reports:", error)
       throw error
     }
   }
