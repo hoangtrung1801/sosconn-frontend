@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Edit3, FileCheck, Clock, User } from "lucide-react"
+import { Edit3, FileCheck, Clock } from "lucide-react"
 import eopApi from "@/lib/api/eop.api"
 import type { EOPReport } from "@/types"
 
@@ -142,32 +142,7 @@ export default function EditReportPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Generated Tasks
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                {report.tasks.length} tasks generated
-              </div>
-              <div className="mt-2 space-y-1">
-                {report.tasks.slice(0, 3).map((task) => (
-                  <div key={task.id} className="text-xs p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                    <div className="font-medium">{task.title}</div>
-                    <div className="text-gray-500 dark:text-gray-400">{task.category}</div>
-                  </div>
-                ))}
-                {report.tasks.length > 3 && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                    +{report.tasks.length - 3} more tasks
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+
         </div>
 
         {/* Editor Panel */}
