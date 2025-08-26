@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { BellIcon, HelpCircleIcon, ChevronDownIcon, Shield, Home, MapPin, Settings } from 'lucide-react';
+import { BellIcon, HelpCircleIcon, ChevronDownIcon, Shield, Home, MapPin, Settings, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -223,6 +223,7 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 const defaultNavigationLinks: NavbarNavItem[] = [
   { href: '/home', label: 'Dashboard', icon: <Home className="h-4 w-4" /> },
   { href: '/disaster-map', label: 'Disaster Map', icon: <MapPin className="h-4 w-4" /> },
+  { href: '/community', label: 'Community', icon: <Users className="h-4 w-4" /> },
   { href: '/emergency-contacts', label: 'Emergency Contacts', icon: <Shield className="h-4 w-4" /> },
   { href: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
 ];
