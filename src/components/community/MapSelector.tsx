@@ -8,6 +8,19 @@ import { Card, CardContent } from '@/components/ui/card'
 import { toast } from '@/hooks/use-toast'
 import 'leaflet/dist/leaflet.css'
 
+// Fix for Leaflet default marker icons in webpack
+import L from 'leaflet';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
 interface LatLng {
   lat: number
   lng: number
@@ -49,23 +62,38 @@ const MapClickHandler = ({ onLocationSelect }: { onLocationSelect: (location: La
   return null
 }
 
-// Fix size when in dialog
-const MapInvalidator = () => {
+// Fix size when in dialog with enhanced timing
+const MapInvalidator = ({ isVisible }: { isVisible?: boolean }) => {
   const map = useMap()
 
   useEffect(() => {
-    const intervals = [100, 300, 500, 1000].map(delay =>
-      setTimeout(() => map.invalidateSize(), delay)
+    // Multiple invalidation attempts with extended timeouts for dialog rendering
+    const intervals = [50, 100, 200, 300, 500, 1000, 1500].map(delay =>
+      setTimeout(() => {
+        try {
+          map.invalidateSize(true) // Force pan and zoom reset
+        } catch (error) {
+          console.warn('Map invalidation failed:', error)
+        }
+      }, delay)
     )
 
-    const resizeHandler = () => map.invalidateSize()
+    // Enhanced resize handler
+    const resizeHandler = () => {
+      try {
+        map.invalidateSize(true)
+      } catch (error) {
+        console.warn('Map resize handler failed:', error)
+      }
+    }
+
     window.addEventListener('resize', resizeHandler)
 
     return () => {
       intervals.forEach(clearTimeout)
       window.removeEventListener('resize', resizeHandler)
     }
-  }, [map])
+  }, [map, isVisible])
 
   return null
 }
@@ -89,6 +117,8 @@ export const MapSelector = ({
     : initialLocation
       ? [initialLocation.lat, initialLocation.lng]
       : defaultCenter
+
+
 
   // Lấy vị trí hiện tại
   const getCurrentLocation = () => {
@@ -162,32 +192,39 @@ export const MapSelector = ({
 
   useEffect(() => {
     if (isVisible && mapRef.current) {
+      // Enhanced invalidation timing for dialog rendering
       const timers = [100, 300, 500].map(delay =>
         setTimeout(() => {
-          mapRef.current?.invalidateSize()
+          try {
+            if (mapRef.current) {
+              mapRef.current.invalidateSize(true)
+            }
+          } catch (error) {
+            console.warn('Map invalidation failed:', error)
+          }
         }, delay)
       )
       return () => timers.forEach(clearTimeout)
     }
   }, [isVisible])
 
+  // Simple return without complex logic
   return (
-    <div className="relative">
-      <div style={{ height }} className="w-full rounded-lg overflow-hidden border border-gray-200">
+    <div className="relative" style={{ height }}>
+      <div className="w-full h-full rounded-lg overflow-hidden border border-gray-200">
         <MapContainer
           center={center}
           zoom={13}
           scrollWheelZoom={true}
           className="w-full h-full"
           ref={mapRef}
-          key={isVisible ? 'visible' : 'hidden'}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          <MapInvalidator />
+          <MapInvalidator isVisible={isVisible} />
           <MapClickHandler onLocationSelect={handleMapClick} />
 
           {selectedLocation && (
@@ -201,64 +238,75 @@ export const MapSelector = ({
         {/* Nút lấy vị trí */}
         <div className="absolute top-4 right-4 z-[1000]">
           <Button
-            className="h-10 w-10 bg-white text-gray-700 border border-gray-300 shadow-lg hover:bg-gray-50"
+            size="sm"
+            className="h-9 w-9 bg-white text-gray-700 border border-gray-300 shadow-lg hover:bg-gray-50 hover:border-blue-300"
             onClick={getCurrentLocation}
             disabled={isGettingLocation}
+            title="Lấy vị trí hiện tại"
           >
             {isGettingLocation ? (
-              <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-3 w-3 border-2 border-blue-500 border-t-transparent rounded-full"></div>
             ) : (
-              <Navigation className="h-4 w-4" />
+              <Navigation className="h-3 w-3" />
             )}
           </Button>
         </div>
 
-        {/* Hướng dẫn */}
-        <div className="absolute bottom-4 left-4 right-4 z-[1000]">
-          <Card className="bg-white/90 backdrop-blur-sm">
-            <CardContent className="p-3">
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <MapPin className="h-4 w-4 text-blue-500" />
-                <span>Nhấn vào bản đồ để chọn vị trí hoặc dùng nút định vị</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Hướng dẫn - floating ở góc trái dưới, không che bản đồ */}
+        {!selectedLocation && (
+          <div className="absolute bottom-4 left-4 z-[1000] max-w-[200px]">
+            <Card className="bg-blue-50/95 backdrop-blur-sm border border-blue-300 shadow-lg">
+              <CardContent className="p-2">
+                <div className="flex items-center space-x-2 text-xs text-blue-800">
+                  <MapPin className="h-3 w-3 text-blue-600 flex-shrink-0" />
+                  <span className="font-medium leading-tight">Click để chọn vị trí</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
 
-      {/* Popup xác nhận */}
+      {/* Popup xác nhận - positioned to not block content below */}
       {showConfirmation && selectedLocation && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="absolute inset-0 flex items-center justify-center bg-black/50 z-[2000] rounded-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-4 left-4 right-4 z-[2000] rounded-lg"
         >
-          <Card className="w-80 max-w-[90%]">
-            <CardContent className="p-6 text-center">
-              <div className="mb-4">
-                <MapPin className="h-12 w-12 text-blue-500 mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Xác nhận vị trí
-                </h3>
-                <p className="text-gray-600 mb-1">Bạn ở đây phải không?</p>
-                <p className="text-sm text-gray-500">{currentAddress}</p>
-              </div>
-
-              <div className="flex space-x-3">
-                <Button
-                  className="flex-1 border border-gray-300 bg-white hover:bg-gray-50"
-                  onClick={cancelSelection}
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Hủy
-                </Button>
-                <Button
-                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white"
-                  onClick={confirmLocation}
-                >
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Xác nhận
-                </Button>
+          <Card className="w-full bg-white shadow-xl border-2 border-blue-200">
+            <CardContent className="p-4">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0">
+                  <MapPin className="h-6 w-6 text-blue-500 mt-1" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                    Xác nhận vị trí này?
+                  </h3>
+                  <p className="text-xs text-gray-600 mb-2 truncate">
+                    {currentAddress}
+                  </p>
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1 text-xs h-7"
+                      onClick={cancelSelection}
+                    >
+                      <X className="h-3 w-3 mr-1" />
+                      Hủy
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-xs h-7"
+                      onClick={confirmLocation}
+                    >
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Chọn
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

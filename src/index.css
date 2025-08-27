@@ -46,6 +46,52 @@
   width: 16rem !important;
 }
 
+/* Fix for Leaflet in dialogs/modals */
+.leaflet-container {
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+.leaflet-control-container {
+  z-index: 1000 !important;
+}
+
+/* Ensure map tiles load properly in dialogs */
+.leaflet-tile-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-overlay-pane {
+  z-index: 2 !important;
+}
+
+.leaflet-marker-pane {
+  z-index: 6 !important;
+}
+
+/* Fix map sizing issues in flexbox containers */
+.leaflet-container img {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Enhanced dialog support for Leaflet */
+[role="dialog"] .leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Force map container visibility in dialogs */
+.leaflet-container .leaflet-map-pane {
+  z-index: 1 !important;
+}
+
+/* Ensure tiles are visible */
+.leaflet-tile {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /*USER MARKER STYLE*/
 .user-marker {
   width: 14px;
