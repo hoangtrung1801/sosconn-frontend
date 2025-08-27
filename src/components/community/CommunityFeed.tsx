@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import MapSelector from './MapSelector';
 
+
+
 // Types for community posts
 interface CommunityPost {
   id: string;
@@ -234,7 +236,7 @@ export const CommunityFeed: React.FC = () => {
               Đăng tin mới
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto z-50">
             <DialogHeader>
               <DialogTitle>Đăng tin mới</DialogTitle>
             </DialogHeader>
@@ -295,10 +297,11 @@ export const CommunityFeed: React.FC = () => {
               {/* Map Section - 40% of form height */}
               <div>
                 <Label>Chọn vị trí trên bản đồ</Label>
-                <div className="mt-2" style={{ height: '250px' }}>
+                <div className="mt-2 relative z-10" style={{ height: '250px' }}>
                   <MapSelector 
                     onLocationSelect={handleLocationSelect}
                     height="100%"
+                    isVisible={isCreateDialogOpen}
                   />
                 </div>
               </div>
@@ -330,18 +333,32 @@ export const CommunityFeed: React.FC = () => {
                 />
               </div>
 
-              {/* Urgency */}
+              {/* Urgency - dropdown với màu sắc đẹp hơn */}
               <div>
                 <Label htmlFor="urgency">Mức độ khẩn cấp</Label>
                 <select
                   id="urgency"
                   value={newPost.urgency}
                   onChange={(e) => setNewPost(prev => ({ ...prev, urgency: e.target.value as CommunityPost['urgency'] }))}
-                  className="w-full p-2 border border-gray-300 rounded-md mt-1"
+                  className="w-full p-3 border border-gray-300 rounded-lg mt-1 bg-white text-gray-800 font-medium focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                  style={{
+                    backgroundColor: newPost.urgency === 'low' ? '#f0fdf4' : 
+                                   newPost.urgency === 'medium' ? '#fffbeb' : 
+                                   newPost.urgency === 'high' ? '#fef2f2' : '#ffffff',
+                    color: newPost.urgency === 'low' ? '#166534' : 
+                           newPost.urgency === 'medium' ? '#a16207' : 
+                           newPost.urgency === 'high' ? '#dc2626' : '#374151'
+                  }}
                 >
-                  <option value="low">Thấp</option>
-                  <option value="medium">Trung bình</option>
-                  <option value="high">Cao</option>
+                  <option value="low" style={{ backgroundColor: '#f0fdf4', color: '#166534' }}>
+                    Thấp
+                  </option>
+                  <option value="medium" style={{ backgroundColor: '#fffbeb', color: '#a16207' }}>
+                    Trung bình
+                  </option>
+                  <option value="high" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>
+                    Cao
+                  </option>
                 </select>
               </div>
 
