@@ -1,13 +1,20 @@
-import { DisasterMap } from '@/components/disaster/disaster-map'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { mockFloodData } from '@/lib/mock-data/flood-data'
-import { FileText, Zap } from 'lucide-react'
+import { DisasterMap } from "@/components/disaster/disaster-map";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { mockFloodData } from "@/lib/mock-data/flood-data";
+import { mockRainData } from "@/lib/mock-data/rain-data";
+import { FileText, Zap } from "lucide-react";
 
 export default function Homepage() {
   const handleGenerateEOP = () => {
-    window.location.href = '/eop/create'
-  }
+    window.location.href = "/eop/create";
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -34,7 +41,7 @@ export default function Homepage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
+              <Button
                 onClick={handleGenerateEOP}
                 className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
               >
@@ -43,7 +50,7 @@ export default function Homepage() {
               </Button>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Quick Stats</CardTitle>
@@ -53,55 +60,77 @@ export default function Homepage() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Active Incidents</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Active Incidents
+                </span>
                 <span className="text-sm font-medium text-red-600 dark:text-red-400">
-                  {mockFloodData.filter(d => d.status === 'active').length}
+                  {mockFloodData.filter((d) => d.status === "active").length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">People Affected</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  People Affected
+                </span>
                 <span className="text-sm font-medium">
-                  {mockFloodData.reduce((sum, d) => sum + d.affectedPeople, 0).toLocaleString()}
+                  {mockFloodData
+                    .reduce((sum, d) => sum + d.affectedPeople, 0)
+                    .toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Total Area</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Total Area
+                </span>
                 <span className="text-sm font-medium">
-                  {mockFloodData.reduce((sum, d) => sum + d.affectedArea, 0).toFixed(1)}km²
+                  {mockFloodData
+                    .reduce((sum, d) => sum + d.affectedArea, 0)
+                    .toFixed(1)}
+                  km²
                 </span>
               </div>
             </CardContent>
           </Card>
         </div>
-        
+
         <div>
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
             Active Disasters Map
           </h2>
-          <DisasterMap disasters={mockFloodData} className="shadow-lg" />
+          <DisasterMap disasters={mockFloodData} rainStations={mockRainData} className="shadow-lg" />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">Active Incidents</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100">
+              Active Incidents
+            </h3>
             <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-              {mockFloodData.filter(d => d.status === 'active').length}
+              {mockFloodData.filter((d) => d.status === "active").length}
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">People Affected</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100">
+              People Affected
+            </h3>
             <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-              {mockFloodData.reduce((sum, d) => sum + d.affectedPeople, 0).toLocaleString()}
+              {mockFloodData
+                .reduce((sum, d) => sum + d.affectedPeople, 0)
+                .toLocaleString()}
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow">
-            <h3 className="font-medium text-gray-900 dark:text-gray-100">Total Area</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100">
+              Total Area
+            </h3>
             <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {mockFloodData.reduce((sum, d) => sum + d.affectedArea, 0).toFixed(1)}km²
+              {mockFloodData
+                .reduce((sum, d) => sum + d.affectedArea, 0)
+                .toFixed(1)}
+              km²
             </p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

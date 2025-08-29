@@ -7,16 +7,16 @@ export const mockFloodData: FloodData[] = [
     severity: 'high',
     status: 'active',
     location: {
-      latitude: 10.8231,
-      longitude: 106.6297,
-      address: 'District 1, Ho Chi Minh City, Vietnam'
+      latitude: 16.0544,
+      longitude: 108.2022,
+      address: 'Hai Chau District, Da Nang, Vietnam'
     },
-    title: 'Severe Flooding in District 1',
-    description: 'Heavy rainfall caused severe flooding affecting main streets and residential areas.',
-    affectedPeople: 1500,
+    title: 'Severe Flooding in Hai Chau District',
+    description: 'Heavy rainfall caused severe flooding affecting main streets and residential areas in downtown Da Nang.',
+    affectedPeople: 1200,
     reportedAt: '2025-01-15T08:30:00Z',
     updatedAt: '2025-01-15T10:15:00Z',
-    reportedBy: 'City Emergency Center',
+    reportedBy: 'Da Nang Emergency Center',
     waterLevel: 1.8,
     affectedArea: 2.5
   },
@@ -26,16 +26,16 @@ export const mockFloodData: FloodData[] = [
     severity: 'medium',
     status: 'monitoring',
     location: {
-      latitude: 10.7769,
-      longitude: 106.7009,
-      address: 'District 2, Ho Chi Minh City, Vietnam'
+      latitude: 16.0678,
+      longitude: 108.2208,
+      address: 'Son Tra District, Da Nang, Vietnam'
     },
-    title: 'Flash Flood in Thu Duc',
-    description: 'Rising water levels in residential areas due to blocked drainage systems.',
-    affectedPeople: 800,
+    title: 'Flash Flood in Son Tra Peninsula',
+    description: 'Rising water levels in coastal residential areas due to blocked drainage systems and high tide.',
+    affectedPeople: 600,
     reportedAt: '2025-01-15T06:45:00Z',
     updatedAt: '2025-01-15T09:30:00Z',
-    reportedBy: 'Local Authorities',
+    reportedBy: 'Son Tra District Authorities',
     waterLevel: 0.9,
     affectedArea: 1.2
   },
@@ -45,18 +45,18 @@ export const mockFloodData: FloodData[] = [
     severity: 'critical',
     status: 'active',
     location: {
-      latitude: 10.7543,
-      longitude: 106.4319,
-      address: 'Cu Chi District, Ho Chi Minh City, Vietnam'
+      latitude: 16.0238,
+      longitude: 108.1580,
+      address: 'Cam Le District, Da Nang, Vietnam'
     },
-    title: 'Critical Flood Emergency',
-    description: 'Dam overflow threatening multiple villages. Immediate evacuation required.',
-    affectedPeople: 3200,
+    title: 'Critical Flood Emergency near Han River',
+    description: 'Han River overflow threatening multiple residential areas. Immediate evacuation of riverside communities required.',
+    affectedPeople: 2800,
     reportedAt: '2025-01-15T05:00:00Z',
     updatedAt: '2025-01-15T10:45:00Z',
-    reportedBy: 'Emergency Response Team',
+    reportedBy: 'Da Nang Emergency Response Team',
     waterLevel: 3.2,
-    affectedArea: 8.7
+    affectedArea: 7.8
   },
   {
     id: 'flood-004',
@@ -64,16 +64,16 @@ export const mockFloodData: FloodData[] = [
     severity: 'low',
     status: 'resolved',
     location: {
-      latitude: 10.8142,
-      longitude: 106.6438,
-      address: 'District 3, Ho Chi Minh City, Vietnam'
+      latitude: 16.0471,
+      longitude: 108.2068,
+      address: 'Thanh Khe District, Da Nang, Vietnam'
     },
-    title: 'Minor Street Flooding',
-    description: 'Temporary flooding on main road, water has receded.',
-    affectedPeople: 200,
+    title: 'Minor Street Flooding Resolved',
+    description: 'Temporary flooding on Dien Bien Phu Street has been cleared, traffic flow restored.',
+    affectedPeople: 150,
     reportedAt: '2025-01-14T14:20:00Z',
     updatedAt: '2025-01-15T07:00:00Z',
-    reportedBy: 'Traffic Police',
+    reportedBy: 'Da Nang Traffic Police',
     waterLevel: 0.3,
     affectedArea: 0.4
   },
@@ -83,17 +83,36 @@ export const mockFloodData: FloodData[] = [
     severity: 'medium',
     status: 'active',
     location: {
-      latitude: 10.7215,
-      longitude: 106.6573,
-      address: 'District 7, Ho Chi Minh City, Vietnam'
+      latitude: 16.0755,
+      longitude: 108.1568,
+      address: 'Lien Chieu District, Da Nang, Vietnam'
     },
-    title: 'Residential Area Flooding',
-    description: 'Moderate flooding in residential complex affecting ground floor units.',
-    affectedPeople: 650,
+    title: 'Residential Area Flooding in Lien Chieu',
+    description: 'Moderate flooding in industrial residential complex affecting ground floor units and small businesses.',
+    affectedPeople: 450,
     reportedAt: '2025-01-15T07:15:00Z',
     updatedAt: '2025-01-15T09:45:00Z',
-    reportedBy: 'Community Leader',
+    reportedBy: 'Lien Chieu Community Leader',
     waterLevel: 1.1,
     affectedArea: 1.8
+  },
+  {
+    id: 'flood-006',
+    type: 'flood',
+    severity: 'high',
+    status: 'monitoring',
+    location: {
+      latitude: 16.0311,
+      longitude: 108.2433,
+      address: 'Ngu Hanh Son District, Da Nang, Vietnam'
+    },
+    title: 'Marble Mountains Area Flooding',
+    description: 'Tourist area near Marble Mountains experiencing significant water accumulation, affecting local businesses.',
+    affectedPeople: 350,
+    reportedAt: '2025-01-15T09:00:00Z',
+    updatedAt: '2025-01-15T11:00:00Z',
+    reportedBy: 'Tourism Department',
+    waterLevel: 1.5,
+    affectedArea: 2.1
   }
 ]
