@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { BellIcon, HelpCircleIcon, ChevronDownIcon, Shield, Home, MapPin, Settings, Users, FileText } from 'lucide-react';
+import { BellIcon, HelpCircleIcon, ChevronDownIcon, Shield, Home, MapPin, Settings, Users, FileText, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -26,6 +26,31 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+
+// Emergency Status Component
+const EmergencyStatus = ({ 
+  isEmergency = false,
+  emergencyLocation = 'Da Nang City',
+  emergencyType = 'Severe Flooding'
+}: {
+  isEmergency?: boolean;
+  emergencyLocation?: string;
+  emergencyType?: string;
+}) => {
+  if (!isEmergency) return null;
+  
+  return (
+    <div className="flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/30 rounded-full">
+      <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400 animate-pulse" />
+      <span className="text-sm font-medium text-red-800 dark:text-red-200">
+        🚨 EMERGENCY: {emergencyType} in {emergencyLocation}
+      </span>
+      <Badge variant="destructive" className="animate-pulse text-xs">
+        LIVE
+      </Badge>
+    </div>
+  );
+};
 
 // Emergency App Logo Component
 const EmergencyLogo = (props: React.SVGAttributes<SVGElement>) => {
@@ -213,6 +238,9 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   userEmail?: string;
   userAvatar?: string;
   notificationCount?: number;
+  isEmergency?: boolean;
+  emergencyLocation?: string;
+  emergencyType?: string;
   onNavItemClick?: (href: string) => void;
   onInfoItemClick?: (item: string) => void;
   onNotificationItemClick?: (item: string) => void;
@@ -238,6 +266,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   userEmail = 'user@emergency.vn',
   userAvatar,
   notificationCount = 0,
+  isEmergency = false,
+  emergencyLocation = 'Da Nang City',
+  emergencyType = 'Severe Flooding',
   onNavItemClick,
   onInfoItemClick,
   onNotificationItemClick,
@@ -260,13 +291,29 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
-        className
+    <>
+      {/* Emergency Status Bar - Full Width Above Navbar */}
+      {isEmergency && (
+        <div className="w-full bg-red-600 dark:bg-red-700 text-white py-2 px-4">
+          <div className="container mx-auto flex items-center justify-center gap-3 text-center">
+            <AlertTriangle className="h-5 w-5 animate-pulse" />
+            <span className="font-semibold">
+              🚨 EMERGENCY ACTIVE: {emergencyType} in {emergencyLocation}
+            </span>
+            <Badge variant="secondary" className="bg-white text-red-600 animate-pulse">
+              LIVE
+            </Badge>
+          </div>
+        </div>
       )}
-      {...props}
-    >
+      
+      <header
+        className={cn(
+          'sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 [&_*]:no-underline',
+          className
+        )}
+        {...props}
+      >
       <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -364,10 +411,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
         </div>
       </div>
-    </header>
+      </header>
+    </>
   );
 };
 
 Navbar.displayName = 'Navbar';
 
-export { EmergencyLogo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu };
+export { EmergencyLogo, HamburgerIcon, InfoMenu, NotificationMenu, UserMenu, EmergencyStatus };

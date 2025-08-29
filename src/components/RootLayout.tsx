@@ -4,6 +4,11 @@ import { Navbar } from "@/components/navbar";
 export default function RootLayout() {
   const navigate = useNavigate();
 
+  // Emergency simulation - same as in Homepage
+  const isEmergency = true;
+  const emergencyLocation = "Da Nang City";
+  const emergencyType = "Severe Flooding";
+
   const handleNavItemClick = (href: string) => {
     // Handle navigation with TanStack Router
     navigate({ to: href });
@@ -26,7 +31,10 @@ export default function RootLayout() {
       <Navbar
         userName="Emergency User"
         userEmail="user@vku-emergency.vn"
-        notificationCount={2}
+        notificationCount={5}
+        isEmergency={isEmergency}
+        emergencyLocation={emergencyLocation}
+        emergencyType={emergencyType}
         onNavItemClick={handleNavItemClick}
         onInfoItemClick={handleInfoItemClick}
         onNotificationItemClick={handleNotificationItemClick}

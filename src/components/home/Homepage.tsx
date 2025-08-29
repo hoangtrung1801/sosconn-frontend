@@ -7,24 +7,84 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { mockFloodData } from "@/lib/mock-data/flood-data";
 import { mockRainData } from "@/lib/mock-data/rain-data";
-import { FileText, Zap } from "lucide-react";
+import { FileText, Zap, AlertTriangle, Clock } from "lucide-react";
 
 export default function Homepage() {
   const handleGenerateEOP = () => {
     window.location.href = "/eop/create";
   };
 
+  // Emergency status simulation
+  const isEmergency = true;
+  const emergencyLocation = "Da Nang City";
+  const emergencyType = "Severe Flooding";
+  const emergencyStartTime = new Date().toLocaleTimeString();
+
   return (
     <div className="container mx-auto p-6">
       <div className="space-y-6">
+        {/* Emergency Alert Banner */}
+        {isEmergency && (
+          <Card className="border-2 border-red-500 bg-red-50 dark:bg-red-950/20 shadow-lg">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400 animate-pulse" />
+                  <div>
+                    <CardTitle className="text-red-800 dark:text-red-200">
+                      🚨 EMERGENCY ACTIVE
+                    </CardTitle>
+                    <CardDescription className="text-red-700 dark:text-red-300">
+                      {emergencyType} in {emergencyLocation}
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge variant="destructive" className="animate-pulse">
+                  LIVE
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 text-sm text-red-700 dark:text-red-300 mb-3">
+                <Clock className="h-4 w-4" />
+                Emergency declared at {emergencyStartTime}
+              </div>
+              <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-md mb-3">
+                <p className="text-red-800 dark:text-red-200 font-medium">
+                  Immediate Action Required: Generate Emergency Operation Plan (EOP) for coordinated disaster response
+                </p>
+              </div>
+              <Button
+                onClick={handleGenerateEOP}
+                className="w-full bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-medium"
+                size="lg"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                🚨 Generate Emergency EOP for {emergencyLocation}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
             Emergency Response Dashboard
+            {isEmergency && (
+              <Badge variant="destructive" className="animate-pulse">
+                EMERGENCY MODE
+              </Badge>
+            )}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             Real-time disaster monitoring and response system
+            {isEmergency && (
+              <span className="text-red-600 dark:text-red-400 font-medium">
+                {" "}• Currently responding to active emergency in {emergencyLocation}
+              </span>
+            )}
           </p>
         </div>
 
