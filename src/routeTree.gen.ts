@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as EmergencyManagementRouteImport } from './routes/emergency-management'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as CitizenRouteImport } from './routes/citizen'
 import { Route as AreaSelectionRouteImport } from './routes/area-selection'
 import { Route as EopIndexRouteImport } from './routes/eop/index'
 import { Route as EopReportRouteImport } from './routes/eop/report'
@@ -31,6 +32,11 @@ const EmergencyManagementRoute = EmergencyManagementRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitizenRoute = CitizenRouteImport.update({
+  id: '/citizen',
+  path: '/citizen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AreaSelectionRoute = AreaSelectionRouteImport.update({
@@ -61,6 +67,7 @@ const EopCreateRoute = EopCreateRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/area-selection': typeof AreaSelectionRoute
+  '/citizen': typeof CitizenRoute
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/area-selection': typeof AreaSelectionRoute
+  '/citizen': typeof CitizenRoute
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/area-selection': typeof AreaSelectionRoute
+  '/citizen': typeof CitizenRoute
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/area-selection'
+    | '/citizen'
     | '/community'
     | '/emergency-management'
     | '/home'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/area-selection'
+    | '/citizen'
     | '/community'
     | '/emergency-management'
     | '/home'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/area-selection'
+    | '/citizen'
     | '/community'
     | '/emergency-management'
     | '/home'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AreaSelectionRoute: typeof AreaSelectionRoute
+  CitizenRoute: typeof CitizenRoute
   CommunityRoute: typeof CommunityRoute
   EmergencyManagementRoute: typeof EmergencyManagementRoute
   HomeRoute: typeof HomeRoute
@@ -155,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/citizen': {
+      id: '/citizen'
+      path: '/citizen'
+      fullPath: '/citizen'
+      preLoaderRoute: typeof CitizenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/area-selection': {
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   AreaSelectionRoute: AreaSelectionRoute,
+  CitizenRoute: CitizenRoute,
   CommunityRoute: CommunityRoute,
   EmergencyManagementRoute: EmergencyManagementRoute,
   HomeRoute: HomeRoute,

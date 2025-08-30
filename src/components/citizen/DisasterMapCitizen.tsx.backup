@@ -1,0 +1,808 @@
+import React, { useState } from "react";
+import { Icon } from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polygon, Polyline } from "react-leaflet";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Hospital, Shield, AlertTriangle, MapPin } from "lucide-react";
+import type { DisasterSeverity } from "@/types/disaster.type";
+import { mockFloodData } from "@/lib/mock-data/flood-data";
+import { mockRainData, type RainStation } from "@/lib/mock-data/rain-data";
+
+// Import Leaflet CSS
+import "leaflet/dist/leaflet.css";
+
+type DisasterPhase = "before" | "during" | "after";
+
+interface Shelter {
+  id: string;
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+  capacity: number;
+  currentOccupancy: number;
+  facilities: string[];
+  status: "available" | "full" | "closed";
+}
+
+interface Hospital {
+  id: string;
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+  emergencyCapacity: number;
+  specialties: string[];
+  status: "operational" | "limited" | "closed";
+}
+
+interface RiskZone {
+  id: string;
+  type: "flood" | "landslide" | "fire" | "storm";
+  severity: "low" | "medium" | "high" | "critical";
+  coordinates: [number, number][];
+  description: string;
+}
+
+interface SafeRoute {
+  id: string;
+  name: string;
+  coordinates: [number, number][];
+  status: "safe" | "dangerous" | "blocked";
+  type: "evacuation" | "emergency_access" | "supply_route";
+}
+
+interface MarkerFilters {
+  disasters: {
+    showAll: boolean;
+    severities: DisasterSeverity[];
+    statuses: string[];
+    types: string[];
+  };
+  rainStations: {
+    showAll: boolean;
+    intensities: RainStation["intensity"][];
+  };
+  shelters: {
+    showAll: boolean;
+    statuses: Shelter["status"][];
+  };
+  hospitals: {
+    showAll: boolean;
+    statuses: Hospital["status"][];
+  };
+  riskZones: {
+    showAll: boolean;
+    severities: RiskZone["severity"][];
+    types: RiskZone["type"][];
+  };
+  safeRoutes: {
+    showAll: boolean;
+    statuses: SafeRoute["status"][];
+    types: SafeRoute["type"][];
+  };
+}
+
+interface DisasterMapCitizenProps {
+  currentPhase: DisasterPhase;
+  emergencyLevel: "low" | "medium" | "high" | "critical";
+  center?: [number, number];
+  zoom?: number;
+  className?: string;
+}
+
+// Mock data for demonstration - Enhanced with more data
+const mockShelters: Shelter[] = [
+  {
+    id: "shelter-1",
+    name: "Da Nang Community Center",
+    location: {
+      latitude: 16.0544,
+      longitude: 108.2022,
+      address: "123 Tran Phu St, Da Nang",
+    },
+    capacity: 500,
+    currentOccupancy: 150,
+    facilities: ["Food", "Medical", "WiFi", "Childcare"],
+    status: "available",
+  },
+  {
+    id: "shelter-2",
+    name: "Hai Chau Sports Complex",
+    location: {
+      latitude: 16.0644,
+      longitude: 108.2122,
+      address: "456 Bach Dang St, Da Nang",
+    },
+    capacity: 800,
+    currentOccupancy: 600,
+    facilities: ["Food", "Medical", "WiFi"],
+    status: "available",
+  },
+  {
+    id: "shelter-3",
+    name: "Son Tra Emergency Shelter",
+    location: {
+      latitude: 16.0744,
+      longitude: 108.2222,
+      address: "789 Vo Nguyen Giap St, Da Nang",
+    },
+    capacity: 300,
+    currentOccupancy: 300,
+    facilities: ["Food", "Medical"],
+    status: "full",
+  },
+  {
+    id: "shelter-4",
+    name: "Thanh Khe Community Hall",
+    location: {
+      latitude: 16.0471,
+      longitude: 108.2068,
+      address: "321 Dien Bien Phu St, Da Nang",
+    },
+    capacity: 400,
+    currentOccupancy: 120,
+    facilities: ["Food", "Medical", "WiFi", "Childcare", "Pet Care"],
+    status: "available",
+  },
+];
+
+const mockHospitals: Hospital[] = [
+  {
+    id: "hospital-1",
+    name: "Da Nang General Hospital",
+    location: {
+      latitude: 16.0444,
+      longitude: 108.1922,
+      address: "124 Hai Phong St, Da Nang",
+    },
+    emergencyCapacity: 200,
+    specialties: ["Emergency", "Surgery", "Pediatrics", "Cardiology"],
+    status: "operational",
+  },
+  {
+    id: "hospital-2",
+    name: "Hoan My Da Nang Hospital",
+    location: {
+      latitude: 16.0344,
+      longitude: 108.1822,
+      address: "161 Nguyen Van Linh St, Da Nang",
+    },
+    emergencyCapacity: 150,
+    specialties: ["Emergency", "Surgery", "ICU"],
+    status: "operational",
+  },
+  {
+    id: "hospital-3",
+    name: "Vinmec Da Nang Hospital",
+    location: {
+      latitude: 16.0612,
+      longitude: 108.2105,
+      address: "458 Minh Khai St, Da Nang",
+    },
+    emergencyCapacity: 180,
+    specialties: ["Emergency", "Trauma", "Pediatrics", "Neurology"],
+    status: "operational",
+  },
+];
+
+const mockRiskZones: RiskZone[] = [
+  {
+    id: "risk-1",
+    type: "flood",
+    severity: "high",
+    coordinates: [
+      [16.04, 108.19],
+      [16.05, 108.19],
+      [16.05, 108.2],
+      [16.04, 108.2],
+    ],
+    description: "High flood risk zone near Han River",
+  },
+  {
+    id: "risk-2",
+    type: "landslide",
+    severity: "medium",
+    coordinates: [
+      [16.07, 108.22],
+      [16.08, 108.22],
+      [16.08, 108.23],
+      [16.07, 108.23],
+    ],
+    description: "Landslide risk zone in Son Tra area",
+  },
+  {
+    id: "risk-3",
+    type: "flood",
+    severity: "critical",
+    coordinates: [
+      [16.02, 108.15],
+      [16.03, 108.15],
+      [16.03, 108.165],
+      [16.02, 108.165],
+    ],
+    description: "Critical flood zone near Han River overflow",
+  },
+];
+
+const mockSafeRoutes: SafeRoute[] = [
+  {
+    id: "route-1",
+    name: "Emergency Evacuation Route A",
+    coordinates: [
+      [16.0544, 108.2022],
+      [16.06, 108.21],
+      [16.065, 108.215],
+      [16.07, 108.22],
+    ],
+    status: "safe",
+    type: "evacuation",
+  },
+  {
+    id: "route-2",
+    name: "Hospital Access Route",
+    coordinates: [
+      [16.0444, 108.1922],
+      [16.05, 108.195],
+      [16.0544, 108.2022],
+    ],
+    status: "safe",
+    type: "emergency_access",
+  },
+  {
+    id: "route-3",
+    name: "Blocked Route to City Center",
+    coordinates: [
+      [16.04, 108.19],
+      [16.045, 108.195],
+      [16.05, 108.2],
+    ],
+    status: "blocked",
+    type: "evacuation",
+  },
+  {
+    id: "route-4",
+    name: "Supply Route - West Side",
+    coordinates: [
+      [16.0755, 108.1568],
+      [16.07, 108.165],
+      [16.065, 108.175],
+      [16.06, 108.185],
+    ],
+    status: "safe",
+    type: "supply_route",
+  },
+];
+
+// Utility functions for colors and icons
+const getSeverityColor = (severity: string): string => {
+  switch (severity) {
+    case "critical":
+      return "#dc2626"; // red-600
+    case "high":
+      return "#ea580c"; // orange-600
+    case "medium":
+      return "#d97706"; // amber-600
+    case "low":
+      return "#16a34a"; // green-600
+    default:
+      return "#6b7280"; // gray-500
+  }
+};
+
+const getRainIntensityColor = (intensity: RainStation["intensity"]): string => {
+  switch (intensity) {
+    case "extreme":
+      return "#7c2d12"; // red-900
+    case "heavy":
+      return "#dc2626"; // red-600
+    case "moderate":
+      return "#2563eb"; // blue-600
+    case "light":
+      return "#06b6d4"; // cyan-500
+    default:
+      return "#6b7280"; // gray-500
+  }
+};
+
+const getRouteColor = (status: SafeRoute["status"]): string => {
+  switch (status) {
+    case "safe":
+      return "#16a34a"; // green-600
+    case "dangerous":
+      return "#ea580c"; // orange-600
+    case "blocked":
+      return "#dc2626"; // red-600
+    default:
+      return "#6b7280"; // gray-500
+  }
+};
+
+const createRainIcon = (station: RainStation) => {
+  const color = getRainIntensityColor(station.intensity);
+
+  return new Icon({
+    iconUrl: `data:image/svg+xml;base64,${btoa(`
+      <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+          <path d="M12 3 C12 3, 6.5 10.5, 6.5 14.5 C6.5 18.09 9.41 21 13 21 C16.59 21 19.5 18.09 19.5 14.5 C19.5 10.5 12 3 12 3 Z" fill="${color}" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M10 9.5 C10.8 8.4 11.6 7.5 12 7" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+        </g>
+      </svg>
+    `)}`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
+    popupAnchor: [0, -24],
+  });
+};
+
+const createDisasterIcon = (severity: DisasterSeverity, status: string) => {
+  const color = getSeverityColor(severity);
+  const opacity = status === "resolved" ? "0.6" : "1";
+
+  return new Icon({
+    iconUrl: `data:image/svg+xml;base64,${btoa(`
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="12" fill="${color}" stroke="white" stroke-width="2" opacity="${opacity}"/>
+        <circle cx="16" cy="16" r="6" fill="white" opacity="0.8"/>
+        <text x="16" y="20" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="${color}">!</text>
+      </svg>
+    `)}`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+};
+
+const createShelterIcon = (shelter: Shelter) => {
+  const color =
+    shelter.status === "available"
+      ? "#16a34a"
+      : shelter.status === "full"
+      ? "#ea580c"
+      : "#dc2626";
+
+  return new Icon({
+    iconUrl: `data:image/svg+xml;base64,${btoa(`
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
+        <path d="M12 10 L20 10 L20 12 L22 12 L22 22 L10 22 L10 12 L12 12 Z" fill="white"/>
+        <path d="M14 14 L18 14 L18 20 L14 20 Z" fill="${color}"/>
+        <circle cx="15" cy="16" r="1" fill="white"/>
+      </svg>
+    `)}`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+};
+
+const createHospitalIcon = (hospital: Hospital) => {
+  const color =
+    hospital.status === "operational"
+      ? "#dc2626"
+      : hospital.status === "limited"
+      ? "#ea580c"
+      : "#6b7280";
+
+  return new Icon({
+    iconUrl: `data:image/svg+xml;base64,${btoa(`
+      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" fill="${color}" stroke="white" stroke-width="2"/>
+        <path d="M14 8 L18 8 L18 12 L22 12 L22 16 L18 16 L18 20 L14 20 L14 16 L10 16 L10 12 L14 12 Z" fill="white"/>
+      </svg>
+    `)}`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+};
+
+const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+export const DisasterMapCitizen: React.FC<DisasterMapCitizenProps> = ({
+  currentPhase,
+  emergencyLevel,
+  center = [16.0544, 108.2022], // Da Nang center
+  zoom = 12,
+  className = "",
+}) => {
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isFilterCollapsed, setIsFilterCollapsed] = useState<boolean>(false);
+
+  // Filter state  
+  const [filters, setFilters] = useState<MarkerFilters>({
+    disasters: {
+      showAll: true,
+      severities: ["critical", "high", "medium", "low"],
+      statuses: ["active", "monitoring", "resolved"],
+      types: [],
+    },
+    rainStations: {
+      showAll: true,
+      intensities: ["extreme", "heavy", "moderate", "light"],
+    },
+    shelters: {
+      showAll: true,
+      statuses: ["available", "full", "closed"],
+    },
+    hospitals: {
+      showAll: true,
+      statuses: ["operational", "limited", "closed"],
+    },
+    riskZones: {
+      showAll: true,
+      severities: ["critical", "high", "medium", "low"],
+      types: ["flood", "landslide", "fire", "storm"],
+    },
+    safeRoutes: {
+      showAll: true,
+      statuses: ["safe", "dangerous", "blocked"],
+      types: ["evacuation", "emergency_access", "supply_route"],
+    },
+  });
+
+  // Toggle functions for filters
+  const toggleLayerVisibility = (layer: keyof MarkerFilters) => {
+    setFilters((prev) => ({
+      ...prev,
+      [layer]: { ...prev[layer], showAll: !prev[layer].showAll },
+    }));
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+        .then(() => setIsFullscreen(true))
+        .catch((err: Error) => console.error("Error entering fullscreen:", err));
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false));
+    }
+  };
+
+  // Helper function to filter items based on current filters
+  const shouldShowDisaster = (disaster: typeof mockFloodData[0]) => {
+    return (
+      filters.disasters.showAll &&
+      filters.disasters.severities.includes(disaster.severity) &&
+      filters.disasters.statuses.includes(disaster.status)
+    );
+  };
+
+  const shouldShowRainStation = (station: RainStation) => {
+    return (
+      filters.rainStations.showAll &&
+      filters.rainStations.intensities.includes(station.intensity)
+    );
+  };
+
+  const shouldShowShelter = (shelter: Shelter) => {
+    return (
+      filters.shelters.showAll &&
+      filters.shelters.statuses.includes(shelter.status)
+    );
+  };
+
+  const shouldShowHospital = (hospital: Hospital) => {
+    return (
+      filters.hospitals.showAll &&
+      filters.hospitals.statuses.includes(hospital.status)
+    );
+  };
+
+  const shouldShowRiskZone = (zone: RiskZone) => {
+    return (
+      filters.riskZones.showAll &&
+      filters.riskZones.severities.includes(zone.severity) &&
+      filters.riskZones.types.includes(zone.type)
+    );
+  };
+
+  const shouldShowSafeRoute = (route: SafeRoute) => {
+    return (
+      filters.safeRoutes.showAll &&
+      filters.safeRoutes.statuses.includes(route.status) &&
+      filters.safeRoutes.types.includes(route.type)
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Phase-specific information cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-600" />
+              <CardTitle className="text-lg">Evacuation Shelters</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Available Shelters</span>
+                <span className="font-medium text-green-600">
+                  {mockShelters.filter((s) => s.status === "available").length}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Total Capacity</span>
+                <span className="font-medium">
+                  {mockShelters.reduce((sum, s) => sum + s.capacity, 0)} people
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Current Occupancy</span>
+                <span className="font-medium">
+                  {mockShelters.reduce((sum, s) => sum + s.currentOccupancy, 0)}{" "}
+                  people
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <Hospital className="h-5 w-5 text-red-600" />
+              <CardTitle className="text-lg">Emergency Hospitals</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Operational</span>
+                <span className="font-medium text-green-600">
+                  {
+                    mockHospitals.filter((h) => h.status === "operational")
+                      .length
+                  }
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Emergency Capacity</span>
+                <span className="font-medium">
+                  {mockHospitals.reduce(
+                    (sum, h) => sum + h.emergencyCapacity,
+                    0
+                  )}{" "}
+                  patients
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-orange-600" />
+              <CardTitle className="text-lg">Risk Assessment</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>High Risk Zones</span>
+                <span className="font-medium text-red-600">
+                  {
+                    mockRiskZones.filter(
+                      (z) => z.severity === "high" || z.severity === "critical"
+                    ).length
+                  }
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Current Phase</span>
+                <Badge
+                  className={`text-xs ${
+                    currentPhase === "before"
+                      ? "bg-blue-500"
+                      : currentPhase === "during"
+                      ? "bg-red-500"
+                      : "bg-green-500"
+                  }`}
+                >
+                  {currentPhase.toUpperCase()}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Map Container */}
+      <div
+        className={`w-full h-[80vh] rounded-lg overflow-hidden border relative ${className} ${
+          isFullscreen
+            ? "fixed inset-0 z-50 h-screen w-screen rounded-none"
+            : ""
+        }`}
+      >
+        {/* Advanced Filters Panel */}
+        <div className="absolute top-2 left-2 z-[9999] bg-white/90 rounded shadow-lg">
+          <div className="flex items-center justify-between p-2">
+            <div className="text-xs font-semibold">Data Layers</div>
+            <Button
+              onClick={() => setIsFilterCollapsed(!isFilterCollapsed)}
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0"
+            >
+              {isFilterCollapsed ? "+" : "−"}
+            </Button>
+          </div>
+
+          {!isFilterCollapsed && (
+            <div className="px-2 pb-2 space-y-2 max-w-sm">
+              {/* Data Layer Toggles */}
+              <div className="grid grid-cols-2 gap-1 text-xs">
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility("disasters", disasterMarkersRef)
+                  }
+                  variant={filters.disasters.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Disasters
+                </Button>
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility("rainStations", rainMarkersRef)
+                  }
+                  variant={filters.rainStations.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Rain Data
+                </Button>
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility("shelters", shelterMarkersRef)
+                  }
+                  variant={filters.shelters.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Shelters
+                </Button>
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility("hospitals", hospitalMarkersRef)
+                  }
+                  variant={filters.hospitals.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Hospitals
+                </Button>
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility(
+                      "riskZones",
+                      undefined,
+                      riskZoneLayersRef
+                    )
+                  }
+                  variant={filters.riskZones.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Risk Zones
+                </Button>
+                <Button
+                  onClick={() =>
+                    toggleLayerVisibility(
+                      "safeRoutes",
+                      undefined,
+                      safeRouteLayersRef
+                    )
+                  }
+                  variant={filters.safeRoutes.showAll ? "default" : "outline"}
+                  size="sm"
+                  className="text-xs h-6"
+                >
+                  Safe Routes
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Map Controls */}
+        <div className="absolute top-2 right-2 z-[9999] flex gap-2">
+          <button
+            onClick={changeToRainMap}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium shadow-lg transition-colors duration-200"
+          >
+            Rain Map
+          </button>
+          <button
+            onClick={toggleFullscreen}
+            className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium shadow-lg transition-colors duration-200"
+          >
+            {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          </button>
+        </div>
+
+        <div ref={mapContainerRef} className="w-full h-full relative z-0" />
+      </div>
+
+      {/* Emergency Phase Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            Current Emergency Status
+          </CardTitle>
+          <CardDescription>
+            Phase: <strong>{currentPhase.toUpperCase()}</strong> | Emergency
+            Level:{" "}
+            <strong
+              className={`${
+                emergencyLevel === "critical"
+                  ? "text-red-600"
+                  : emergencyLevel === "high"
+                  ? "text-orange-600"
+                  : emergencyLevel === "medium"
+                  ? "text-yellow-600"
+                  : "text-green-600"
+              }`}
+            >
+              {emergencyLevel.toUpperCase()}
+            </strong>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div>
+              <div className="font-medium">Active Disasters</div>
+              <div className="text-lg font-bold text-red-600">
+                {mockFloodData.filter((d) => d.status === "active").length}
+              </div>
+            </div>
+            <div>
+              <div className="font-medium">Rain Stations</div>
+              <div className="text-lg font-bold text-blue-600">
+                {mockRainData.length}
+              </div>
+            </div>
+            <div>
+              <div className="font-medium">Safe Routes</div>
+              <div className="text-lg font-bold text-green-600">
+                {mockSafeRoutes.filter((r) => r.status === "safe").length}
+              </div>
+            </div>
+            <div>
+              <div className="font-medium">Blocked Routes</div>
+              <div className="text-lg font-bold text-red-600">
+                {mockSafeRoutes.filter((r) => r.status === "blocked").length}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
