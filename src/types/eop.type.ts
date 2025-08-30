@@ -28,6 +28,7 @@ export interface EOPReport {
   content: string
   tasks: EOPTask[]
   status: 'draft' | 'confirmed' | 'active'
+  area?: string // Optional area identifier for filtering
 }
 
 export interface GenerateEOPResponse {

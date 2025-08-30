@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as EmergencyManagementRouteImport } from './routes/emergency-management'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as AreaSelectionRouteImport } from './routes/area-selection'
 import { Route as EopIndexRouteImport } from './routes/eop/index'
 import { Route as EopReportRouteImport } from './routes/eop/report'
 import { Route as EopEditRouteImport } from './routes/eop/edit'
@@ -21,9 +23,19 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmergencyManagementRoute = EmergencyManagementRouteImport.update({
+  id: '/emergency-management',
+  path: '/emergency-management',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreaSelectionRoute = AreaSelectionRouteImport.update({
+  id: '/area-selection',
+  path: '/area-selection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EopIndexRoute = EopIndexRouteImport.update({
@@ -48,7 +60,9 @@ const EopCreateRoute = EopCreateRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/area-selection': typeof AreaSelectionRoute
   '/community': typeof CommunityRoute
+  '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
@@ -56,7 +70,9 @@ export interface FileRoutesByFullPath {
   '/eop': typeof EopIndexRoute
 }
 export interface FileRoutesByTo {
+  '/area-selection': typeof AreaSelectionRoute
   '/community': typeof CommunityRoute
+  '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
@@ -65,7 +81,9 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/area-selection': typeof AreaSelectionRoute
   '/community': typeof CommunityRoute
+  '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
@@ -75,7 +93,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/area-selection'
     | '/community'
+    | '/emergency-management'
     | '/home'
     | '/eop/create'
     | '/eop/edit'
@@ -83,7 +103,9 @@ export interface FileRouteTypes {
     | '/eop'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/area-selection'
     | '/community'
+    | '/emergency-management'
     | '/home'
     | '/eop/create'
     | '/eop/edit'
@@ -91,7 +113,9 @@ export interface FileRouteTypes {
     | '/eop'
   id:
     | '__root__'
+    | '/area-selection'
     | '/community'
+    | '/emergency-management'
     | '/home'
     | '/eop/create'
     | '/eop/edit'
@@ -100,7 +124,9 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AreaSelectionRoute: typeof AreaSelectionRoute
   CommunityRoute: typeof CommunityRoute
+  EmergencyManagementRoute: typeof EmergencyManagementRoute
   HomeRoute: typeof HomeRoute
   EopCreateRoute: typeof EopCreateRoute
   EopEditRoute: typeof EopEditRoute
@@ -117,11 +143,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/emergency-management': {
+      id: '/emergency-management'
+      path: '/emergency-management'
+      fullPath: '/emergency-management'
+      preLoaderRoute: typeof EmergencyManagementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/community': {
       id: '/community'
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/area-selection': {
+      id: '/area-selection'
+      path: '/area-selection'
+      fullPath: '/area-selection'
+      preLoaderRoute: typeof AreaSelectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eop/': {
@@ -156,7 +196,9 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  AreaSelectionRoute: AreaSelectionRoute,
   CommunityRoute: CommunityRoute,
+  EmergencyManagementRoute: EmergencyManagementRoute,
   HomeRoute: HomeRoute,
   EopCreateRoute: EopCreateRoute,
   EopEditRoute: EopEditRoute,

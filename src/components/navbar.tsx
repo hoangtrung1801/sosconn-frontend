@@ -250,6 +250,7 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 // Default navigation links for emergency app
 const defaultNavigationLinks: NavbarNavItem[] = [
   { href: '/home', label: 'Dashboard', icon: <Home className="h-4 w-4" /> },
+  { href: '/area-selection', label: 'Emergency Management', icon: <AlertTriangle className="h-4 w-4" /> },
   { href: '/disaster-map', label: 'Disaster Map', icon: <MapPin className="h-4 w-4" /> },
   { href: '/eop/', label: 'EOP Reports', icon: <FileText className="h-4 w-4" /> },
   { href: '/community', label: 'Community', icon: <Users className="h-4 w-4" /> },

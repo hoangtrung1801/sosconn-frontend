@@ -4,662 +4,576 @@ import type { EOPReport } from "@/types/eop.type"
 const getDaysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 const getDaysFromNow = (days: number) => new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString()
 
-// Mock EOP Reports with comprehensive data
-export const mockEOPReports: EOPReport[] = [
+// Area-specific EOP Reports for Da Nang Districts
+export const areaEOPReports: EOPReport[] = [
+  // Hai Chau District - Urban Flooding
   {
-    id: "eop-2024-001",
-    title: "Severe Flood Response Plan - Mekong Delta Region",
-    generatedAt: getDaysAgo(2),
+    id: "eop-hai-chau-2024",
+    title: "Urban Flood Response Plan - Hải Châu District",
+    generatedAt: getDaysAgo(1),
     status: "active",
     disasterInfo: {
       disasterType: "flood",
-      affectedArea: "An Giang, Dong Thap, Can Tho, Long An",
+      affectedArea: "Hải Châu District, Da Nang City",
       severityLevel: "critical",
-      dateFrom: getDaysAgo(1),
-      dateTo: getDaysFromNow(14),
-      additionalInfo: "Monsoon season flooding with water levels exceeding 2.5m above normal. Approximately 150,000 people at risk."
+      dateFrom: getDaysAgo(0.5),
+      dateTo: getDaysFromNow(7),
+      additionalInfo: "Severe urban flooding affecting central business district. Water levels 0.8-1.2m in low-lying areas. 45,000 people affected."
     },
-    content: `# Severe Flood Response Plan - Mekong Delta Region
+    content: `# Urban Flood Response Plan - Hải Châu District
 
-## Executive Summary
-This Emergency Operation Plan addresses the severe flooding situation in the Mekong Delta region caused by unprecedented monsoon rainfall and upstream dam releases. The plan coordinates response efforts across multiple provinces to ensure public safety and minimize economic impact.
+## Emergency Overview
+Central business district of Da Nang experiencing severe flooding due to overwhelmed drainage systems and continuous rainfall. Critical infrastructure and commercial areas are significantly impacted.
 
 ## Situation Assessment
-- **Flood Level**: 2.5m above normal seasonal levels
-- **Affected Population**: ~150,000 residents
-- **Infrastructure Impact**: 85 schools, 23 healthcare facilities, major highways
-- **Agricultural Loss**: 45,000 hectares of rice paddies submerged
-- **Duration Estimate**: 14-21 days
+- **Flood Level**: 0.8-1.2m in CBD areas, 0.4-0.6m in residential zones
+- **Affected Population**: ~45,000 residents and workers
+- **Infrastructure Impact**: Central Hospital, People's Committee building, 25 schools
+- **Economic Impact**: 850+ businesses affected, financial district partially closed
+- **Transportation**: Major roads flooded, disrupted public transport
 
-## Immediate Response Actions (0-72 hours)
+## Immediate Response Actions (0-24 hours)
 
-### 1. Search and Rescue Operations
-- Deploy 12 rescue boats across affected areas
-- Establish 6 temporary rescue coordination centers
-- Coordinate with Vietnam Navy for additional marine assets
-- Set up emergency medical stations at evacuation centers
+### 1. Emergency Evacuation
+- Evacuate ground floors of critical buildings
+- Establish 8 emergency shelters in higher ground locations
+- Priority evacuation for Central Hospital patients
+- Deploy amphibious vehicles for stranded residents
 
-### 2. Evacuation Procedures
-- Mandatory evacuation for areas with water levels >1.5m
-- Activate 15 designated evacuation centers
-- Coordinate transportation for elderly and disabled residents
-- Establish pet-friendly evacuation areas
+### 2. Infrastructure Protection
+- Activate all 15 drainage pumps at maximum capacity
+- Deploy temporary barriers around critical facilities
+- Emergency power generators for hospitals and emergency services
+- Coordinate with city utilities for service restoration
 
-### 3. Emergency Communications
-- Activate emergency broadcast system
-- Deploy mobile communication units where infrastructure is damaged
-- Coordinate with telecom providers for priority restoration
-- Establish community liaison officers in each district
+### 3. Traffic and Access Management
+- Close flooded major streets: Tran Phu, Bach Dang, Le Duan
+- Establish emergency vehicle corridors
+- Deploy traffic police at critical intersections
+- Coordinate with taxi and ride services for alternative transport
 
-## Resource Deployment
+## Resource Allocation
+- **Emergency Personnel**: 180 responders, 45 medical staff
+- **Equipment**: 25 water pumps, 12 rescue boats, 8 generators
+- **Shelters**: Capacity for 8,000 evacuees across 8 locations
+- **Medical**: Field hospital setup, ambulance teams
 
-### Human Resources
-- **Emergency Response Teams**: 450 personnel
-- **Medical Personnel**: 85 doctors, 120 nurses, 45 paramedics
-- **Search & Rescue**: 180 trained personnel with 35 boats
-- **Logistics Support**: 200 volunteers coordinated by Red Cross
-
-### Equipment & Supplies
-- **Emergency Shelters**: Capacity for 25,000 displaced residents
-- **Medical Supplies**: 30-day stock for 50,000 people
-- **Food & Water**: 14-day emergency rations, water purification systems
-- **Transportation**: 25 evacuation buses, 12 amphibious vehicles
-
-## Coordination Structure
-- **Incident Command**: Provincial Emergency Operations Center
-- **Field Operations**: District-level command posts
-- **Inter-agency Coordination**: Daily briefings with military, NGOs
-- **International Support**: ASEAN Disaster Response coordination
-
-## Recovery Planning
-- Infrastructure damage assessment teams deployed
-- Agricultural support for affected farmers
-- Economic assistance program activation
-- Psychological support services for trauma victims
+## Coordination Centers
+- **Primary Command**: Hai Chau District Emergency Operations Center
+- **Medical Command**: Central Hospital Emergency Wing
+- **Traffic Command**: District Traffic Police Station
 
 ---
-*Plan Status: Active | Last Updated: ${new Date(getDaysAgo(2)).toLocaleString()}*`,
+*Plan Status: Active | Updated every 2 hours during emergency*`,
     tasks: [
       {
-        id: "task-flood-001",
-        title: "Deploy Emergency Rescue Teams",
-        description: "Deploy 12 rescue boat teams to priority flood zones in An Giang and Dong Thap provinces",
+        id: "task-hc-001",
+        title: "Activate Emergency Drainage System",
+        description: "Ensure all 15 municipal drainage pumps are operational at full capacity",
         priority: "high",
-        assignedTo: "Emergency Response Command",
-        deadline: getDaysFromNow(0.5), // 12 hours
+        assignedTo: "Hai Chau Infrastructure Team",
+        deadline: getDaysFromNow(0.25),
         status: "in_progress",
         category: "response"
       },
       {
-        id: "task-flood-002", 
-        title: "Activate Evacuation Centers",
-        description: "Open and staff all 15 designated evacuation centers with full capacity",
+        id: "task-hc-002",
+        title: "Central Hospital Protection",
+        description: "Deploy barriers and emergency generators to protect Central Hospital operations",
         priority: "high",
-        assignedTo: "Civil Defense Team",
-        deadline: getDaysFromNow(0.25), // 6 hours
-        status: "in_progress",
+        assignedTo: "Medical Emergency Team",
+        deadline: getDaysFromNow(0.5),
+        status: "pending",
         category: "response"
       },
       {
-        id: "task-flood-003",
-        title: "Medical Supply Distribution",
-        description: "Distribute emergency medical supplies to all evacuation centers and field hospitals",
+        id: "task-hc-003",
+        title: "Business District Evacuation",
+        description: "Coordinate evacuation of ground floor businesses in flood-affected areas",
         priority: "medium",
-        assignedTo: "Medical Logistics Team",
+        assignedTo: "Civil Defense Corps",
         deadline: getDaysFromNow(1),
         status: "pending",
         category: "response"
       },
       {
-        id: "task-flood-004",
-        title: "Infrastructure Assessment",
-        description: "Conduct damage assessment of critical infrastructure including hospitals, schools, and transportation networks",
+        id: "task-hc-004",
+        title: "Traffic Rerouting",
+        description: "Implement emergency traffic management for major flooded roads",
         priority: "medium",
-        assignedTo: "Engineering Assessment Team",
-        deadline: getDaysFromNow(3),
-        status: "pending",
-        category: "recovery"
+        assignedTo: "District Traffic Police",
+        deadline: getDaysFromNow(0.75),
+        status: "in_progress",
+        category: "response"
       }
     ]
   },
+
+  // Son Tra District
   {
-    id: "eop-2024-002",
-    title: "Earthquake Preparedness Plan - Central Highlands",
-    generatedAt: getDaysAgo(5),
-    status: "confirmed",
-    disasterInfo: {
-      disasterType: "earthquake",
-      affectedArea: "Dak Lak, Gia Lai, Kon Tum, Dak Nong",
-      severityLevel: "high",
-      dateFrom: getDaysAgo(4),
-      dateTo: getDaysFromNow(30),
-      additionalInfo: "Magnitude 6.2 earthquake with multiple aftershocks expected. Mountainous terrain complicates rescue operations."
-    },
-    content: `# Earthquake Preparedness Plan - Central Highlands
-
-## Seismic Event Overview
-A magnitude 6.2 earthquake struck the Central Highlands region, with the epicenter located 15km northwest of Buon Ma Thuot. Significant aftershocks are expected over the next 30 days.
-
-## Affected Areas and Population
-- **Primary Impact Zone**: 50km radius from epicenter
-- **Secondary Impact**: Extended to provincial capitals
-- **Population at Risk**: ~180,000 residents
-- **Vulnerable Infrastructure**: Highland settlements, mountain roads
-
-## Immediate Response Protocol
-
-### Phase 1: Emergency Response (0-24 hours)
-1. **Search and Rescue Activation**
-   - Deploy specialized mountain rescue teams
-   - Coordinate with military helicopter units
-   - Establish field triage centers
-
-2. **Structural Safety Assessment** 
-   - Inspect all critical facilities (hospitals, schools, government buildings)
-   - Red-tag unsafe structures immediately
-   - Establish temporary safe zones
-
-3. **Communication Systems**
-   - Deploy satellite communication units
-   - Establish emergency broadcast protocols
-   - Coordinate with national emergency services
-
-### Phase 2: Stabilization (1-7 days)
-- Set up temporary housing for displaced residents
-- Restore essential services (power, water, medical)
-- Continue aftershock monitoring
-- Coordinate international aid if needed
-
-### Phase 3: Recovery (1-4 weeks)
-- Permanent housing assessment and planning
-- Infrastructure rebuilding prioritization
-- Economic support for affected businesses
-- Long-term geological monitoring setup
-
-## Resource Requirements
-- **Mountain Rescue Teams**: 8 specialized units
-- **Medical Facilities**: 5 field hospitals, trauma surgeons
-- **Heavy Equipment**: Excavators, cranes for debris removal
-- **Communication**: Satellite phones, portable radio systems
-
----
-*This plan coordinates with national seismic monitoring systems and international earthquake response protocols.*`,
-    tasks: [
-      {
-        id: "task-eq-001",
-        title: "Deploy Mountain Rescue Teams",
-        description: "Send 8 specialized mountain rescue teams to affected highland areas",
-        priority: "high",
-        assignedTo: "Mountain Rescue Command",
-        deadline: getDaysFromNow(0.33), // 8 hours
-        status: "completed",
-        category: "response"
-      },
-      {
-        id: "task-eq-002",
-        title: "Structural Safety Inspections",
-        description: "Complete safety assessment of all critical infrastructure in affected areas",
-        priority: "high",
-        assignedTo: "Engineering Safety Team",
-        deadline: getDaysFromNow(2),
-        status: "in_progress", 
-        category: "response"
-      },
-      {
-        id: "task-eq-003",
-        title: "Aftershock Monitoring Setup",
-        description: "Install additional seismic monitoring equipment in the affected region",
-        priority: "medium",
-        assignedTo: "Geological Survey Team",
-        deadline: getDaysFromNow(5),
-        status: "pending",
-        category: "preparation"
-      }
-    ]
-  },
-  {
-    id: "eop-2024-003", 
-    title: "Typhoon Preparedness - Coastal Provinces",
-    generatedAt: getDaysAgo(7),
-    status: "confirmed",
+    id: "eop-son-tra-2024",
+    title: "Storm Surge Response Plan - Sơn Trà District",
+    generatedAt: getDaysAgo(1),
+    status: "active",
     disasterInfo: {
       disasterType: "storm",
-      affectedArea: "Quang Ninh, Hai Phong, Thai Binh, Nam Dinh",
+      affectedArea: "Sơn Trà District, Da Nang City",
       severityLevel: "high",
-      dateFrom: getDaysFromNow(2),
+      dateFrom: getDaysAgo(0.5),
       dateTo: getDaysFromNow(5),
-      additionalInfo: "Category 3 typhoon approaching with winds up to 185 km/h. Storm surge expected up to 3 meters."
+      additionalInfo: "Storm surge from tropical storm affecting coastal areas. Waves 3-4m high, coastal flooding expected."
     },
-    content: `# Typhoon Preparedness Plan - Northern Coastal Provinces
+    content: `# Storm Surge Response Plan - Sơn Trà District
 
-## Storm Overview
-**Typhoon Minh** is approaching the northern coast of Vietnam as a Category 3 storm with maximum sustained winds of 185 km/h. Landfall expected in 48-72 hours.
+## Storm Surge Overview
+Tropical storm generating dangerous waves and coastal flooding along Son Tra Peninsula. Tourist areas and coastal communities at high risk.
 
-## Projected Impact Assessment
-- **Wind Speeds**: 150-185 km/h sustained, gusts up to 220 km/h
-- **Storm Surge**: 2-3 meters above normal high tide
-- **Rainfall**: 200-350mm over 24-hour period
-- **Affected Population**: ~500,000 coastal residents
+## Impact Assessment
+- **Wave Height**: 3-4 meters with storm surge up to 2m
+- **Coastal Flooding**: 500m inland penetration expected
+- **Tourist Areas**: My Khe Beach, Linh Ung Pagoda area affected
+- **Population**: ~18,000 residents, 12,000 tourists at risk
+- **Infrastructure**: Coastal roads, resorts, fishing ports
 
-## Pre-Landfall Actions (48-72 hours before impact)
+## Emergency Response Protocol
 
-### Evacuation Operations
-1. **Mandatory Evacuation Zones**
-   - All coastal areas within 2km of shoreline
-   - Low-lying areas prone to flooding
-   - Temporary structures and fishing communities
-   
-2. **Evacuation Centers**
-   - Activate 45 inland evacuation facilities
-   - Capacity for 75,000 evacuees
-   - Special provisions for families with pets
-   
-3. **Transportation Coordination**
-   - Deploy 80 evacuation buses
-   - Coordinate with Vietnam Railways for inland transport
-   - Establish evacuation routes with police escort
+### Phase 1: Coastal Evacuation (0-12 hours)
+- Mandatory evacuation of beachfront hotels and resorts
+- Relocate fishing boats to protected harbors
+- Clear My Khe Beach and coastal walkways
+- Activate 6 inland evacuation centers
 
-### Infrastructure Protection
-- Secure all ports and harbors
-- Power grid shutdown in high-risk areas
-- Water treatment facility protection measures
-- Hospital backup generator testing
+### Phase 2: Infrastructure Protection (6-24 hours)
+- Deploy sandbags along vulnerable coastal roads
+- Secure Linh Ung Pagoda and cultural sites
+- Protect telecommunication towers on Ba Na Hills
+- Emergency generators for critical facilities
 
-### Supply Pre-positioning
-- 7-day emergency supplies for 100,000 people
-- Medical supplies at inland hospitals
-- Fuel reserves for emergency vehicles
-- Communication equipment backups
+### Phase 3: Search and Rescue Standby
+- Position marine rescue teams at strategic locations
+- Deploy helicopters for isolated area access
+- Coordinate with Coast Guard for offshore emergencies
+- Medical teams at evacuation centers
 
-## During Storm Operations
-- Emergency services sheltering protocols
-- Damage assessment teams on standby
-- Medical emergency response coordination
-- Search and rescue preparation
-
-## Post-Storm Recovery
-- Rapid damage assessment within 6 hours
-- Priority restoration of critical infrastructure
-- Debris clearance operations
-- Economic support activation
+## Resource Deployment
+- **Marine Units**: 8 rescue boats, Coast Guard coordination
+- **Air Support**: 2 helicopters on standby
+- **Evacuation Centers**: 6 sites with 15,000 capacity
+- **Emergency Personnel**: 120 responders, 30 medical staff
 
 ---
-*Coordination with National Meteorological Center for real-time storm tracking.*`,
+*Coordinated with Da Nang Tourism Department and Coast Guard*`,
     tasks: [
       {
-        id: "task-ty-001",
-        title: "Issue Evacuation Orders",
-        description: "Issue mandatory evacuation orders for all coastal zones within 2km of shoreline",
+        id: "task-st-001",
+        title: "Coastal Resort Evacuation",
+        description: "Evacuate all beachfront hotels and resorts to inland safety zones",
         priority: "high",
-        assignedTo: "Provincial Emergency Committee",
-        deadline: getDaysFromNow(1.5), // 36 hours before landfall
-        status: "pending",
-        category: "preparation"
-      },
-      {
-        id: "task-ty-002",
-        title: "Activate Evacuation Centers",
-        description: "Open and fully staff all 45 designated evacuation centers",
-        priority: "high",
-        assignedTo: "Civil Defense Corps",
-        deadline: getDaysFromNow(1.75), // 42 hours
-        status: "pending",
-        category: "preparation"
-      },
-      {
-        id: "task-ty-003",
-        title: "Secure Critical Infrastructure",
-        description: "Complete protection measures for hospitals, power stations, and water facilities",
-        priority: "medium",
-        assignedTo: "Infrastructure Security Team",
-        deadline: getDaysFromNow(1.25), // 30 hours
-        status: "pending",
-        category: "preparation"
-      }
-    ]
-  },
-  {
-    id: "eop-2024-004",
-    title: "Industrial Fire Response - Ho Chi Minh City",
-    generatedAt: getDaysAgo(12),
-    status: "confirmed", 
-    disasterInfo: {
-      disasterType: "fire",
-      affectedArea: "District 7, Ho Chi Minh City Industrial Zone",
-      severityLevel: "medium",
-      dateFrom: getDaysAgo(11),
-      dateTo: getDaysFromNow(7),
-      additionalInfo: "Chemical plant fire with potential toxic smoke. 5km evacuation radius established."
-    },
-    content: `# Industrial Fire Response Plan - HCMC Industrial Zone
-
-## Incident Overview
-Major industrial fire at Saigon Chemical Manufacturing facility in District 7. Fire involves chemical storage areas with potential for toxic smoke dispersion.
-
-## Hazard Assessment
-- **Fire Scope**: 15,000 m² manufacturing facility
-- **Chemical Hazards**: Ammonia, sulfuric acid, petroleum products
-- **Smoke Plume**: Extending 8km northeast with prevailing winds
-- **Evacuation Radius**: 5km precautionary zone
-
-## Response Operations
-
-### Fire Suppression
-- **Fire Department Response**: 25 fire trucks, 120 firefighters
-- **Specialized Units**: HAZMAT teams, foam suppression systems
-- **Industrial Support**: Plant safety team coordination
-- **Water Supply**: Mobile water tankers, industrial hydrants
-
-### Evacuation and Safety
-- **Affected Residents**: ~12,000 people in evacuation zone
-- **Evacuation Centers**: 8 facilities in Districts 1, 2, and 8
-- **Transportation**: City bus fleet for resident transport
-- **Medical Screening**: Air quality monitoring, respiratory checks
-
-### Environmental Monitoring
-- **Air Quality Sensors**: Real-time toxic gas monitoring
-- **Water Contamination**: Testing of nearby Saigon River
-- **Soil Assessment**: Long-term contamination evaluation
-- **Wildlife Protection**: Coordination with environmental agencies
-
-### Traffic and Access Control
-- **Road Closures**: Major highways and local streets
-- **Emergency Access Routes**: Maintained for response vehicles
-- **Public Transport**: Diverted bus and metro routes
-- **Commercial Impact**: Temporary business relocations
-
-## Recovery Phases
-1. **Immediate (0-48 hours)**: Fire suppression, evacuation completion
-2. **Short-term (2-14 days)**: Environmental cleanup, resident return
-3. **Long-term (1-6 months)**: Facility reconstruction, environmental restoration
-
----
-*Coordinated with Vietnam Fire Prevention Department and Environmental Protection Agency.*`,
-    tasks: [
-      {
-        id: "task-fire-001",
-        title: "Complete Fire Suppression",
-        description: "Fully extinguish industrial fire and secure chemical storage areas",
-        priority: "high",
-        assignedTo: "HCMC Fire Department",
-        deadline: getDaysFromNow(0.5), // 12 hours
+        assignedTo: "Tourist Area Emergency Team",
+        deadline: getDaysFromNow(0.5),
         status: "in_progress",
         category: "response"
       },
       {
-        id: "task-fire-002",
-        title: "Air Quality Assessment",
-        description: "Comprehensive air quality testing before allowing resident return",
+        id: "task-st-002",
+        title: "Harbor Protection",
+        description: "Secure fishing boats and marine equipment in protected harbors",
         priority: "high",
+        assignedTo: "Marine Safety Team",
+        deadline: getDaysFromNow(0.75),
+        status: "pending",
+        category: "response"
+      },
+      {
+        id: "task-st-003",
+        title: "Cultural Site Protection",
+        description: "Implement protection measures for Linh Ung Pagoda and historical sites",
+        priority: "medium",
+        assignedTo: "Cultural Heritage Team",
+        deadline: getDaysFromNow(1),
+        status: "pending",
+        category: "response"
+      }
+    ]
+  },
+
+  // Other districts follow similar pattern...
+  // Thanh Khe District
+  {
+    id: "eop-thanh-khe-2024",
+    title: "Flash Flood Response Plan - Thanh Khê District",
+    generatedAt: getDaysAgo(1),
+    status: "active",
+    disasterInfo: {
+      disasterType: "flood",
+      affectedArea: "Thanh Khê District, Da Nang City",
+      severityLevel: "critical",
+      dateFrom: getDaysAgo(0.25),
+      dateTo: getDaysFromNow(3),
+      additionalInfo: "Flash flooding in educational hub. University campuses and residential areas severely affected."
+    },
+    content: `# Flash Flood Response Plan - Thanh Khê District
+
+## Flash Flood Emergency
+Educational district experiencing rapid flooding due to overwhelmed drainage and upstream water flow. University of Da Nang and residential complexes at high risk.
+
+## Critical Situation
+- **Water Level**: Rising rapidly, 0.6-1.0m in low areas
+- **Affected Institutions**: University of Da Nang, 15 schools
+- **Student Population**: ~25,000 students potentially affected
+- **Residential Impact**: 12 apartment complexes, 8,000 families
+- **Infrastructure**: Educational facilities, student dormitories
+
+## Emergency Response Actions
+
+### Immediate Evacuation (0-6 hours)
+- Emergency evacuation of ground floor dormitories
+- Move university equipment and documents to upper floors
+- Establish emergency shelters in gymnasium buildings
+- Coordinate student transportation to safe areas
+
+### Educational Institution Protection
+- Deploy pumps to critical university buildings
+- Protect library and computer facilities
+- Secure laboratory equipment and chemicals
+- Emergency power for research facilities
+
+### Community Response
+- Open community centers as temporary shelters
+- Deploy mobile medical units to residential areas
+- Coordinate with apartment building management
+- Emergency food and water distribution
+
+## Resource Coordination
+- **Educational Emergency Team**: 85 personnel
+- **Student Services**: 45 staff for student evacuation
+- **Community Support**: 120 volunteers
+- **Equipment**: 18 water pumps, 8 generators
+
+---
+*Coordinated with University Administration and Student Affairs*`,
+    tasks: [
+      {
+        id: "task-tk-001",
+        title: "University Evacuation Protocol",
+        description: "Execute emergency evacuation of all ground-floor dormitories and vulnerable buildings",
+        priority: "high",
+        assignedTo: "University Emergency Team",
+        deadline: getDaysFromNow(0.25),
+        status: "in_progress",
+        category: "response"
+      },
+      {
+        id: "task-tk-002",
+        title: "Educational Facility Protection",
+        description: "Deploy pumps and barriers to protect critical university infrastructure",
+        priority: "high",
+        assignedTo: "Facilities Management Team",
+        deadline: getDaysFromNow(0.5),
+        status: "pending",
+        category: "response"
+      },
+      {
+        id: "task-tk-003",
+        title: "Student Welfare Management",
+        description: "Coordinate temporary housing and support for displaced students",
+        priority: "medium",
+        assignedTo: "Student Affairs Team",
+        deadline: getDaysFromNow(1),
+        status: "pending",
+        category: "response"
+      }
+    ]
+  },
+
+  // Cam Le District
+  {
+    id: "eop-cam-le-2024",
+    title: "River Flood Response Plan - Cẩm Lệ District",
+    generatedAt: getDaysAgo(1),
+    status: "active",
+    disasterInfo: {
+      disasterType: "flood",
+      affectedArea: "Cẩm Lệ District, Da Nang City",
+      severityLevel: "high",
+      dateFrom: getDaysAgo(0.75),
+      dateTo: getDaysFromNow(10),
+      additionalInfo: "Cam Le River overflow affecting industrial and agricultural areas. Factory evacuations in progress."
+    },
+    content: `# River Flood Response Plan - Cẩm Lệ District
+
+## River Flooding Emergency
+Cam Le River has exceeded flood stage, affecting industrial zones and agricultural areas. Manufacturing facilities and farming communities require immediate response.
+
+## Flood Impact Assessment
+- **River Level**: 2.1m above flood stage
+- **Industrial Impact**: 12 factories, 45 warehouses affected
+- **Agricultural Loss**: 2,500 hectares of crops flooded
+- **Population**: ~8,500 residents in flood-prone areas
+- **Infrastructure**: Industrial access roads, irrigation systems
+
+## Industrial Emergency Response
+
+### Factory Evacuation and Safety
+- Immediate shutdown of affected manufacturing operations
+- Evacuate workers from flooded industrial zones
+- Secure hazardous materials and chemicals
+- Deploy environmental monitoring teams
+
+### Agricultural Support
+- Emergency livestock evacuation to higher ground
+- Crop loss assessment for insurance claims
+- Support for affected farming families
+- Coordinate with agricultural cooperatives
+
+### Infrastructure Protection
+- Reinforce river embankments where possible
+- Deploy portable barriers for critical facilities
+- Emergency road access maintenance
+- Backup power for affected communities
+
+## Emergency Resources
+- **Industrial Safety Team**: 95 specialists
+- **Agricultural Support**: 60 extension workers
+- **Environmental Monitoring**: 25 technicians
+- **Community Support**: 140 volunteers
+
+---
+*Coordinated with Industrial Zone Management and Department of Agriculture*`,
+    tasks: [
+      {
+        id: "task-cl-001",
+        title: "Industrial Zone Evacuation",
+        description: "Complete evacuation of workers from flooded factory areas and secure hazardous materials",
+        priority: "high",
+        assignedTo: "Industrial Safety Team",
+        deadline: getDaysFromNow(0.5),
+        status: "in_progress",
+        category: "response"
+      },
+      {
+        id: "task-cl-002",
+        title: "Livestock Emergency Relocation",
+        description: "Evacuate livestock from flooded agricultural areas to safe zones",
+        priority: "high",
+        assignedTo: "Agricultural Emergency Team",
+        deadline: getDaysFromNow(1),
+        status: "pending",
+        category: "response"
+      },
+      {
+        id: "task-cl-003",
+        title: "Environmental Impact Assessment",
+        description: "Monitor potential chemical contamination from industrial facilities",
+        priority: "medium",
         assignedTo: "Environmental Monitoring Team",
         deadline: getDaysFromNow(2),
         status: "pending",
         category: "response"
-      },
-      {
-        id: "task-fire-003",
-        title: "Evacuation Center Management",
-        description: "Maintain evacuation centers until safe return conditions confirmed",
-        priority: "medium",
-        assignedTo: "Emergency Shelter Team",
-        deadline: getDaysFromNow(3),
-        status: "in_progress",
-        category: "response"
       }
     ]
   },
+
+  // Lien Chieu District
   {
-    id: "eop-2024-005",
-    title: "Landslide Emergency Response - Northern Mountains",
-    generatedAt: getDaysAgo(20),
+    id: "eop-lien-chieu-2024",
+    title: "Urban Development Flood Response - Liên Chiểu District",
+    generatedAt: getDaysAgo(1),
     status: "active",
     disasterInfo: {
-      disasterType: "landslide",
-      affectedArea: "Lao Cai, Ha Giang, Cao Bang",
-      severityLevel: "high", 
-      dateFrom: getDaysAgo(19),
-      dateTo: getDaysFromNow(21),
-      additionalInfo: "Multiple landslides triggered by heavy rainfall. Remote mountain communities isolated."
+      disasterType: "flood",
+      affectedArea: "Liên Chiểu District, Da Nang City",
+      severityLevel: "high",
+      dateFrom: getDaysAgo(0.5),
+      dateTo: getDaysFromNow(6),
+      additionalInfo: "New urban development areas experiencing flooding due to inadequate drainage infrastructure."
     },
-    content: `# Landslide Emergency Response Plan - Northern Mountain Region
+    content: `# Urban Development Flood Response Plan - Liên Chiểu District
 
-## Geological Emergency Overview
-Severe rainfall has triggered multiple landslides across the northern mountain provinces, isolating 15 remote communities and blocking major transportation routes.
+## Development Area Flooding
+Rapidly expanding urban district facing infrastructure challenges during flooding. New residential complexes and incomplete drainage systems are particularly vulnerable.
 
-## Affected Areas
-- **Primary Impact**: Sa Pa, Dong Van, Tra Linh districts  
-- **Isolated Communities**: 15 villages, ~8,500 residents
-- **Infrastructure Damage**: 45km of mountain roads, 3 bridges destroyed
-- **Communication**: 8 villages without phone/internet connectivity
+## Affected Development Areas
+- **New Residential**: 25 apartment complexes, 15,000 residents
+- **Under Construction**: 8 building projects temporarily halted
+- **Infrastructure**: Incomplete drainage, temporary roads flooded
+- **Transportation**: New bus routes disrupted, bridge access limited
 
-## Search and Rescue Operations
+## Emergency Response Strategy
 
-### Mountain Rescue Deployment
-- **Helicopter Units**: 6 military helicopters for personnel/supply transport
-- **Ground Teams**: 12 specialized mountain rescue units
-- **Search Dogs**: 8 trained avalanche/disaster search dogs
-- **Medical Teams**: Mobile field hospitals with trauma specialists
+### Residential Community Protection
+- Evacuate ground-floor apartments in vulnerable complexes
+- Deploy portable pumps to residential areas
+- Establish community emergency centers in newer buildings
+- Coordinate with building management companies
 
-### Access Route Restoration
-- **Heavy Equipment**: Bulldozers, excavators for debris clearance
-- **Engineering Corps**: Military engineers for temporary bridge construction
-- **Route Priorities**: Medical evacuation paths, supply delivery roads
-- **Alternative Transport**: Pack animals, all-terrain vehicles
+### Construction Site Safety
+- Secure construction sites and equipment
+- Prevent environmental hazards from building materials
+- Protect ongoing infrastructure projects
+- Coordinate with developers for emergency access
 
-### Community Support
-- **Emergency Supplies**: Food, water, medical supplies via helicopter
-- **Communication**: Satellite phones, emergency radio systems
-- **Shelter Assessment**: Evaluating homes for continued habitability
-- **Evacuation Planning**: For most vulnerable residents
+### Infrastructure Emergency Measures
+- Deploy mobile pumping stations
+- Create temporary drainage channels
+- Emergency road repairs for access routes
+- Coordinate utilities restoration
 
-## Risk Assessment and Monitoring
-- **Geological Survey**: Ongoing slope stability monitoring
-- **Weather Tracking**: Continued rainfall risk assessment
-- **Secondary Hazards**: Identifying areas at risk for additional slides
-- **Long-term Planning**: Permanent relocation considerations
-
-## International Cooperation
-- **Cross-border Coordination**: With Chinese emergency services
-- **Technical Assistance**: UN disaster response expertise
-- **Equipment Support**: Specialized rescue equipment from regional partners
+## Resource Deployment
+- **Urban Planning Emergency Team**: 70 specialists
+- **Construction Safety Team**: 55 inspectors
+- **Community Response**: 180 volunteers
+- **Equipment**: 22 mobile pumps, 6 generators
 
 ---
-*This operation coordinates with Vietnam Border Guard and international mountain rescue organizations.*`,
+*Coordinated with Urban Planning Department and Construction Management*`,
     tasks: [
       {
-        id: "task-land-001",
-        title: "Helicopter Supply Missions",
-        description: "Deliver emergency supplies to all 15 isolated communities via helicopter",
+        id: "task-lc-001",
+        title: "Apartment Complex Safety",
+        description: "Evacuate vulnerable ground-floor apartments and establish emergency centers",
         priority: "high",
-        assignedTo: "Vietnam Air Force Rescue Wing",
-        deadline: getDaysFromNow(1),
+        assignedTo: "Community Emergency Team",
+        deadline: getDaysFromNow(0.75),
         status: "in_progress",
         category: "response"
       },
       {
-        id: "task-land-002",
-        title: "Road Clearance Operations", 
-        description: "Clear debris from priority mountain roads to restore access",
-        priority: "high",
-        assignedTo: "Military Engineering Corps",
-        deadline: getDaysFromNow(5),
-        status: "in_progress",
-        category: "recovery"
-      },
-      {
-        id: "task-land-003",
-        title: "Geological Hazard Assessment",
-        description: "Complete geological survey of landslide-prone areas for future risk",
+        id: "task-lc-002",
+        title: "Construction Site Security",
+        description: "Secure all construction sites and prevent environmental hazards",
         priority: "medium",
-        assignedTo: "National Geological Institute",
-        deadline: getDaysFromNow(14),
-        status: "pending",
-        category: "mitigation"
-      }
-    ]
-  },
-  {
-    id: "eop-2024-006",
-    title: "Drought Management Plan - Central Coast",
-    generatedAt: getDaysAgo(30),
-    status: "draft",
-    disasterInfo: {
-      disasterType: "storm", // Using storm as closest available type
-      affectedArea: "Binh Dinh, Phu Yen, Khanh Hoa, Ninh Thuan",
-      severityLevel: "medium",
-      dateFrom: getDaysAgo(60),
-      dateTo: getDaysFromNow(120),
-      additionalInfo: "Severe drought conditions affecting agricultural production. Water reservoirs at 25% capacity."
-    },
-    content: `# Drought Management Plan - Central Coast Provinces
-
-## Drought Conditions Assessment
-The central coast region is experiencing severe drought conditions with rainfall 65% below normal for the past 3 months. Water reservoirs are critically low.
-
-## Impact Analysis
-- **Agricultural**: 85,000 hectares of rice and crops affected
-- **Water Supply**: 200,000 residents with limited water access
-- **Economic**: Estimated $45 million in agricultural losses
-- **Livestock**: 150,000 cattle and buffalo requiring emergency water
-
-## Water Resource Management
-
-### Emergency Water Supply
-- **Mobile Water Trucks**: 50 trucks delivering to rural areas
-- **Community Wells**: Drilling 25 emergency wells
-- **Water Rationing**: Scheduled water distribution in urban areas
-- **Desalination**: Temporary coastal desalination units
-
-### Agricultural Support
-- **Crop Switching**: Support for drought-resistant crop varieties
-- **Irrigation Efficiency**: Drip irrigation system subsidies
-- **Livestock Support**: Emergency feed and water for animals
-- **Farmer Assistance**: Financial support and technical guidance
-
-### Long-term Solutions
-- **Water Storage**: Planning for additional reservoir capacity
-- **Infrastructure**: Improved water distribution networks
-- **Conservation**: Public awareness and water-saving programs
-- **Climate Adaptation**: Long-term drought-resistant planning
-
----
-*Coordinated with Ministry of Agriculture and Rural Development and Water Resources Ministry.*`,
-    tasks: [
-      {
-        id: "task-drought-001",
-        title: "Deploy Emergency Water Trucks",
-        description: "Send 50 water trucks to provide emergency water supply to affected rural communities",
-        priority: "high",
-        assignedTo: "Provincial Water Authority",
-        deadline: getDaysFromNow(2),
+        assignedTo: "Construction Safety Team",
+        deadline: getDaysFromNow(1.5),
         status: "pending",
         category: "response"
       },
       {
-        id: "task-drought-002",
-        title: "Emergency Well Drilling",
-        description: "Complete drilling of 25 emergency water wells in most affected areas",
-        priority: "medium",
-        assignedTo: "Water Infrastructure Team",
-        deadline: getDaysFromNow(21),
+        id: "task-lc-003",
+        title: "Mobile Drainage Deployment",
+        description: "Deploy mobile pumping stations to areas with inadequate drainage",
+        priority: "high",
+        assignedTo: "Infrastructure Emergency Team",
+        deadline: getDaysFromNow(0.5),
         status: "pending",
         category: "response"
       }
     ]
   },
+
+  // Ngu Hanh Son District
   {
-    id: "eop-2024-007",
-    title: "Urban Flood Response - Hanoi Capital",
-    generatedAt: getDaysAgo(45),
+    id: "eop-ngu-hanh-son-2024",
+    title: "Landslide Prevention Plan - Ngũ Hành Sơn District",
+    generatedAt: getDaysAgo(1),
     status: "confirmed",
     disasterInfo: {
-      disasterType: "flood",
-      affectedArea: "Ba Dinh, Hoan Kiem, Long Bien, Dong Da Districts",
-      severityLevel: "low",
-      dateFrom: getDaysAgo(40),
-      dateTo: getDaysFromNow(5),
-      additionalInfo: "Urban flooding due to overwhelmed drainage systems during heavy rainfall season."
+      disasterType: "landslide",
+      affectedArea: "Ngũ Hành Sơn District, Da Nang City",
+      severityLevel: "medium",
+      dateFrom: getDaysAgo(0.25),
+      dateTo: getDaysFromNow(14),
+      additionalInfo: "Heavy rainfall creating landslide risk around Marble Mountains. Tourist areas and cave systems monitoring required."
     },
-    content: `# Urban Flood Response Plan - Hanoi Capital
+    content: `# Landslide Prevention Plan - Ngũ Hành Sơn District
 
-## Urban Flooding Situation
-Heavy rainfall has overwhelmed Hanoi's drainage infrastructure, causing flooding in low-lying urban areas and major transportation disruptions.
+## Landslide Risk Assessment
+Marble Mountains area experiencing increased landslide risk due to continuous rainfall. Tourist attractions and residential areas near mountain slopes require monitoring and preventive measures.
 
-## Affected Areas and Infrastructure
-- **Flooded Streets**: 125 roads with water levels 20-50cm
-- **Transportation**: 15 metro stations, 3 bus terminals affected  
-- **Residential**: 8,500 households experiencing basement flooding
-- **Commercial**: 450 businesses with ground floor water damage
+## Risk Areas Identified
+- **Marble Mountains**: Cave systems and tourist paths
+- **Tourist Areas**: Linh Ung Pagoda, cave entrance areas
+- **Residential**: 15 neighborhoods near mountain base
+- **Infrastructure**: Access roads, parking areas, tourist facilities
 
-## Immediate Response Actions
+## Preventive Response Actions
 
-### Traffic and Transportation Management
-- **Road Closures**: 25 major streets temporarily closed
-- **Alternative Routes**: Emergency traffic routing plans activated
-- **Public Transport**: Modified bus and metro schedules
-- **Emergency Access**: Maintained routes for ambulances and emergency services
+### Tourist Area Safety
+- Temporary closure of high-risk cave tours
+- Evacuate visitors from dangerous cliff areas
+- Deploy safety personnel at tourist access points
+- Emergency communication systems for isolated areas
 
-### Drainage and Water Management
-- **Pump Stations**: All 45 drainage pumps operating at maximum capacity
-- **Street Drainage**: Manual clearing of blocked storm drains
-- **Sandbag Operations**: Temporary flood barriers for critical facilities
-- **Water Quality**: Monitoring for contamination in flood waters
+### Geological Monitoring
+- Install temporary slope monitoring equipment
+- Regular geological assessment of vulnerable areas
+- Coordinate with geological survey teams
+- Early warning system activation
 
-### Public Safety and Communication
-- **Traffic Police**: Additional officers at flood-prone intersections
-- **Public Warnings**: Real-time flood alerts via mobile and radio
-- **Emergency Shelters**: 5 community centers available if needed
-- **Medical Response**: Emergency medical teams positioned strategically
+### Community Preparedness
+- Evacuation planning for at-risk residential areas
+- Emergency shelter identification in safe zones
+- Community alert systems activation
+- Coordination with local tourism operators
 
-## Recovery Operations
-- **Damage Assessment**: Systematic evaluation of infrastructure damage
-- **Cleanup Operations**: Street cleaning and debris removal
-- **Insurance Coordination**: Support for affected businesses and residents
-- **Infrastructure Repair**: Priority restoration of damaged drainage systems
+## Specialized Resources
+- **Geological Team**: 35 specialists
+- **Tourist Safety**: 45 guides and safety personnel
+- **Mountain Rescue**: 25 trained responders
+- **Monitoring Equipment**: Slope sensors, communication systems
 
 ---
-*Coordinated with Hanoi Traffic Police, Urban Planning Department, and Municipal Services.*`,
+*Coordinated with Tourism Department and Geological Institute*`,
     tasks: [
       {
-        id: "task-urban-001",
-        title: "Activate All Drainage Pumps",
-        description: "Ensure all 45 municipal drainage pumps are operational and running at full capacity",
+        id: "task-nhs-001",
+        title: "Cave System Safety Assessment",
+        description: "Complete safety evaluation of all cave tours and tourist areas",
         priority: "high",
-        assignedTo: "Hanoi Municipal Services",
-        deadline: getDaysFromNow(0.25), // 6 hours
-        status: "completed",
-        category: "response"
-      },
-      {
-        id: "task-urban-002",
-        title: "Traffic Route Management",
-        description: "Implement alternative traffic routing and manage road closures",
-        priority: "medium",
-        assignedTo: "Hanoi Traffic Police",
-        deadline: getDaysFromNow(0.5), // 12 hours
-        status: "completed",
-        category: "response"
-      },
-      {
-        id: "task-urban-003",
-        title: "Infrastructure Damage Assessment",
-        description: "Complete assessment of flood damage to drainage and transportation infrastructure",
-        priority: "medium",
-        assignedTo: "Urban Infrastructure Team",
-        deadline: getDaysFromNow(3),
+        assignedTo: "Tourist Safety Team",
+        deadline: getDaysFromNow(0.5),
         status: "in_progress",
-        category: "recovery"
+        category: "preparation"
+      },
+      {
+        id: "task-nhs-002",
+        title: "Slope Monitoring Installation",
+        description: "Deploy geological monitoring equipment on high-risk slopes",
+        priority: "medium",
+        assignedTo: "Geological Survey Team",
+        deadline: getDaysFromNow(2),
+        status: "pending",
+        category: "preparation"
+      },
+      {
+        id: "task-nhs-003",
+        title: "Tourist Evacuation Planning",
+        description: "Develop evacuation procedures for tourists in mountainous areas",
+        priority: "medium",
+        assignedTo: "Tourism Emergency Team",
+        deadline: getDaysFromNow(1),
+        status: "pending",
+        category: "preparation"
       }
     ]
   }
 ]
 
-// Helper function to get mock reports (for use in components)
-export const getMockEOPReports = (): EOPReport[] => {
-  return mockEOPReports
+// Mapping areas to their EOP reports
+export const areaToEOPMapping: Record<string, string> = {
+  "hai-chau": "eop-hai-chau-2024",
+  "son-tra": "eop-son-tra-2024", 
+  "thanh-khe": "eop-thanh-khe-2024",
+  "cam-le": "eop-cam-le-2024",
+  "lien-chieu": "eop-lien-chieu-2024",
+  "ngu-hanh-son": "eop-ngu-hanh-son-2024"
 }
 
-// Helper function to get a specific mock report by ID
+// Helper function to get EOP report by area
+export const getEOPReportByArea = (area: string): EOPReport | null => {
+  const eopId = areaToEOPMapping[area]
+  if (!eopId) return null
+  return areaEOPReports.find(report => report.id === eopId) || null
+}
+
+// Keep original mock data for backward compatibility
+export const mockEOPReports: EOPReport[] = areaEOPReports
+
+// Helper functions for backward compatibility
+export const getMockEOPReports = (): EOPReport[] => {
+  return areaEOPReports
+}
+
 export const getMockEOPReportById = (id: string): EOPReport | null => {
-  return mockEOPReports.find(report => report.id === id) || null
+  return areaEOPReports.find(report => report.id === id) || null
 }
