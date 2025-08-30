@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { 
   Bell, 
   AlertTriangle, 
@@ -13,12 +13,15 @@ import {
   Users,
   Activity,
   CheckCircle,
-  Plus
+  Plus,
+  Radio
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { MultiChannelAlertSystem } from './MultiChannelAlertSystem'
 import type { Alert } from '@/hooks/use-emergency-management'
 
 interface AlertManagementProps {
@@ -258,141 +261,158 @@ export const AlertManagement: React.FC<AlertManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Alert Statistics */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="text-center">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-blue-600">{statistics.totalAlerts}</div>
-            <div className="text-sm text-gray-600">Total Alerts</div>
-          </CardContent>
-        </Card>
-        <Card className="text-center">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-orange-600">{statistics.unreadAlerts}</div>
-            <div className="text-sm text-gray-600">Unread</div>
-          </CardContent>
-        </Card>
-        <Card className="text-center">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-red-600">{statistics.criticalAlerts}</div>
-            <div className="text-sm text-gray-600">Critical</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters and Controls */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Search className="h-4 w-4 text-gray-500" />
-            <Input
-              placeholder="Search alerts..."
-              value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              className="w-64"
-            />
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Type:</span>
-            <div className="flex gap-1">
-              {(['all', 'disaster', 'community', 'system'] as const).map((type) => (
-                <Button
-                  key={type}
-                  size="sm"
-                  variant={filters.type === type ? "default" : "outline"}
-                  onClick={() => setFilters(prev => ({ ...prev, type }))}
-                  className="h-7 px-2 text-xs"
-                >
-                  {type === 'all' ? 'All' : type}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Priority:</span>
-            <div className="flex gap-1">
-              {(['all', 'critical', 'high', 'medium', 'low'] as const).map((priority) => (
-                <Button
-                  key={priority}
-                  size="sm"
-                  variant={filters.priority === priority ? "default" : "outline"}
-                  onClick={() => setFilters(prev => ({ ...prev, priority }))}
-                  className="h-7 px-2 text-xs"
-                >
-                  {priority === 'all' ? 'All' : priority}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Status:</span>
-            <div className="flex gap-1">
-              {(['all', 'unread', 'read'] as const).map((status) => (
-                <Button
-                  key={status}
-                  size="sm"
-                  variant={filters.status === status ? "default" : "outline"}
-                  onClick={() => setFilters(prev => ({ ...prev, status }))}
-                  className="h-7 px-2 text-xs"
-                >
-                  {status === 'all' ? 'All' : status}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
+      <Tabs defaultValue="alerts" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="alerts" className="flex items-center gap-2">
+            <Bell className="h-4 w-4" />
+            Alert Management
+          </TabsTrigger>
+          <TabsTrigger value="broadcast" className="flex items-center gap-2">
+            <Radio className="h-4 w-4" />
+            Multi-Channel Broadcast
+          </TabsTrigger>
+        </TabsList>
         
-        <div className="flex items-center gap-2">
-          {statistics.unreadAlerts > 0 && (
-            <Button 
-              size="sm"
-              onClick={markAllAsRead}
-              variant="outline"
-            >
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Mark All Read
-            </Button>
-          )}
-          
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Alert
-          </Button>
-        </div>
-      </div>
+        <TabsContent value="alerts" className="space-y-6">
+          {/* Alert Statistics */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card className="text-center">
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold text-blue-600">{statistics.totalAlerts}</div>
+                <div className="text-sm text-gray-600">Total Alerts</div>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold text-orange-600">{statistics.unreadAlerts}</div>
+                <div className="text-sm text-gray-600">Unread</div>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold text-red-600">{statistics.criticalAlerts}</div>
+                <div className="text-sm text-gray-600">Critical</div>
+              </CardContent>
+            </Card>
+          </div>
 
-      {/* Alert List */}
-      <div className="space-y-4">
-        <AnimatePresence>
-          {filteredAlerts.map((alert, index) => (
-            <AlertCard
-              key={alert.id}
-              alert={alert}
-              onMarkAsRead={onMarkAsRead}
-              index={index}
-            />
-          ))}
-        </AnimatePresence>
+          {/* Filters and Controls */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="flex items-center gap-2">
+                <Search className="h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="Search alerts..."
+                  value={filters.search}
+                  onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                  className="w-64"
+                />
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Type:</span>
+                <div className="flex gap-1">
+                  {(['all', 'disaster', 'community', 'system'] as const).map((type) => (
+                    <Button
+                      key={type}
+                      size="sm"
+                      variant={filters.type === type ? "default" : "outline"}
+                      onClick={() => setFilters(prev => ({ ...prev, type }))}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {type === 'all' ? 'All' : type}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Priority:</span>
+                <div className="flex gap-1">
+                  {(['all', 'critical', 'high', 'medium', 'low'] as const).map((priority) => (
+                    <Button
+                      key={priority}
+                      size="sm"
+                      variant={filters.priority === priority ? "default" : "outline"}
+                      onClick={() => setFilters(prev => ({ ...prev, priority }))}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {priority === 'all' ? 'All' : priority}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Status:</span>
+                <div className="flex gap-1">
+                  {(['all', 'unread', 'read'] as const).map((status) => (
+                    <Button
+                      key={status}
+                      size="sm"
+                      variant={filters.status === status ? "default" : "outline"}
+                      onClick={() => setFilters(prev => ({ ...prev, status }))}
+                      className="h-7 px-2 text-xs"
+                    >
+                      {status === 'all' ? 'All' : status}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {statistics.unreadAlerts > 0 && (
+                <Button 
+                  size="sm"
+                  onClick={markAllAsRead}
+                  variant="outline"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Mark All Read
+                </Button>
+              )}
+              
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Create Alert
+              </Button>
+            </div>
+          </div>
+
+          {/* Alert List */}
+          <div className="space-y-4">
+            {filteredAlerts.map((alert, index) => (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                onMarkAsRead={onMarkAsRead}
+                index={index}
+              />
+            ))}
+            
+            {filteredAlerts.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-12"
+              >
+                <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                  No alerts found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Try adjusting your filters or check back later for new alerts.
+                </p>
+              </motion.div>
+            )}
+          </div>
+        </TabsContent>
         
-        {filteredAlerts.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
-            <Bell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-              No alerts found
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Try adjusting your filters or check back later for new alerts.
-            </p>
-          </motion.div>
-        )}
-      </div>
+        <TabsContent value="broadcast">
+          <MultiChannelAlertSystem />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

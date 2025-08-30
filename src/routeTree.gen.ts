@@ -18,6 +18,7 @@ import { Route as EopIndexRouteImport } from './routes/eop/index'
 import { Route as EopReportRouteImport } from './routes/eop/report'
 import { Route as EopEditRouteImport } from './routes/eop/edit'
 import { Route as EopCreateRouteImport } from './routes/eop/create'
+import { Route as EopAiGenerateRouteImport } from './routes/eop/ai-generate'
 
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
@@ -64,6 +65,11 @@ const EopCreateRoute = EopCreateRouteImport.update({
   path: '/eop/create',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EopAiGenerateRoute = EopAiGenerateRouteImport.update({
+  id: '/eop/ai-generate',
+  path: '/eop/ai-generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/area-selection': typeof AreaSelectionRoute
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
+  '/eop/ai-generate': typeof EopAiGenerateRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
+  '/eop/ai-generate': typeof EopAiGenerateRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
+  '/eop/ai-generate': typeof EopAiGenerateRoute
   '/eop/create': typeof EopCreateRoute
   '/eop/edit': typeof EopEditRoute
   '/eop/report': typeof EopReportRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
+    | '/eop/ai-generate'
     | '/eop/create'
     | '/eop/edit'
     | '/eop/report'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
+    | '/eop/ai-generate'
     | '/eop/create'
     | '/eop/edit'
     | '/eop/report'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
+    | '/eop/ai-generate'
     | '/eop/create'
     | '/eop/edit'
     | '/eop/report'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   EmergencyManagementRoute: typeof EmergencyManagementRoute
   HomeRoute: typeof HomeRoute
+  EopAiGenerateRoute: typeof EopAiGenerateRoute
   EopCreateRoute: typeof EopCreateRoute
   EopEditRoute: typeof EopEditRoute
   EopReportRoute: typeof EopReportRoute
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EopCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/eop/ai-generate': {
+      id: '/eop/ai-generate'
+      path: '/eop/ai-generate'
+      fullPath: '/eop/ai-generate'
+      preLoaderRoute: typeof EopAiGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   EmergencyManagementRoute: EmergencyManagementRoute,
   HomeRoute: HomeRoute,
+  EopAiGenerateRoute: EopAiGenerateRoute,
   EopCreateRoute: EopCreateRoute,
   EopEditRoute: EopEditRoute,
   EopReportRoute: EopReportRoute,

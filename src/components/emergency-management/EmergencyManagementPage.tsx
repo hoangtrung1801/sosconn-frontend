@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { AlertTriangle, FileText, CheckSquare, Bell, Shield, Activity, ArrowLeft, MapPin, Package, Users } from 'lucide-react'
+import { AlertTriangle, FileText, CheckSquare, Bell, Shield, Activity, ArrowLeft, MapPin, Package, Users, Eye, GraduationCap, Navigation } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,9 @@ import { AlertManagement } from '@/components/emergency-management/AlertManageme
 import { EmergencyStatusSummary } from '@/components/emergency-management/EmergencyStatusSummary'
 import { ResourceManagement } from '@/components/emergency-management/ResourceManagement'
 import { VolunteerManagement } from '@/components/emergency-management/VolunteerManagement'
+import { RiskDashboard } from '@/components/emergency-management/RiskDashboard'
+import { TrainingSimulation } from '@/components/emergency-management/TrainingSimulation'
+import { LiveSituationMap } from '@/components/emergency-management/LiveSituationMap'
 
 interface EmergencyManagementPageProps {
   selectedArea?: string
@@ -186,7 +189,14 @@ export const EmergencyManagementPage: React.FC<EmergencyManagementPageProps> = (
           transition={{ duration: 0.4, delay: 0.2 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
+            <TabsList className="grid w-full grid-cols-8 mb-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
+              <TabsTrigger 
+                value="risk" 
+                className="flex items-center space-x-2 data-[state=active]:bg-red-500 data-[state=active]:text-white"
+              >
+                <Eye className="h-4 w-4" />
+                <span>Risk Monitor</span>
+              </TabsTrigger>
               <TabsTrigger 
                 value="eop" 
                 className="flex items-center space-x-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
@@ -237,7 +247,35 @@ export const EmergencyManagementPage: React.FC<EmergencyManagementPageProps> = (
                   {statistics.volunteerStatistics?.availableVolunteers || 0}
                 </Badge>
               </TabsTrigger>
+              <TabsTrigger 
+                value="training" 
+                className="flex items-center space-x-2 data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                <GraduationCap className="h-4 w-4" />
+                <span>Training</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="situation" 
+                className="flex items-center space-x-2 data-[state=active]:bg-cyan-500 data-[state=active]:text-white"
+              >
+                <Navigation className="h-4 w-4" />
+                <span>Live Map</span>
+              </TabsTrigger>
             </TabsList>
+
+            {/* Risk Dashboard Tab */}
+            <TabsContent value="risk" className="mt-0">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <RiskDashboard 
+                  selectedArea={selectedAreaName}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            </TabsContent>
 
             {/* EOP Management Tab */}
             <TabsContent value="eop" className="mt-0">
@@ -345,6 +383,38 @@ export const EmergencyManagementPage: React.FC<EmergencyManagementPageProps> = (
                   isLoading={isLoading}
                   onAssignVolunteer={actions.assignVolunteer}
                   onUpdateVolunteer={actions.updateVolunteer}
+                />
+              </motion.div>
+            </TabsContent>
+
+            {/* Training & Simulation Tab */}
+            <TabsContent value="training" className="mt-0">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <TrainingSimulation 
+                  selectedArea={selectedAreaName}
+                  isLoading={isLoading}
+                />
+              </motion.div>
+            </TabsContent>
+
+            {/* Live Situation Map Tab */}
+            <TabsContent value="situation" className="mt-0">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <LiveSituationMap 
+                  selectedArea={selectedAreaName}
+                  isEmergency={isEmergency}
+                  onSOSResponse={(sosId, action) => {
+                    console.log(`SOS ${sosId} action: ${action}`)
+                    // Handle SOS response actions
+                  }}
                 />
               </motion.div>
             </TabsContent>

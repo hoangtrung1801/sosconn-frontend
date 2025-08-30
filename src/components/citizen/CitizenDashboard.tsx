@@ -147,6 +147,8 @@ export default function CitizenDashboard() {
         </div>
       </motion.div>
 
+      <div className=""></div>
+
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <motion.div
@@ -287,10 +289,9 @@ export default function CitizenDashboard() {
               </motion.div>
             )}
 
-            {/* Community Reporting - Show during and after */}
-            {(currentPhase === "during" || currentPhase === "after") && (
+            <div className="my-4">
               <CommunityReporting currentPhase={currentPhase} />
-            )}
+            </div>
 
             {/* Recovery Hub - Show after emergency */}
             {currentPhase === "after" && <RecoveryHub />}
