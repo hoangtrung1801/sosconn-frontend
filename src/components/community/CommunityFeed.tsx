@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, MessageSquare, MapPin, Plus, CheckCircle, Upload, X } from 'lucide-react';
+import { Heart, MapPin, Plus, CheckCircle, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import MapSelector from './MapSelector';
+import CommentList from './CommentList';
 
 
 
@@ -472,11 +473,6 @@ export const CommunityFeed: React.FC = () => {
                       <span>{post.likes}</span>
                     </Button>
                     
-                    <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-gray-600">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>{post.comments}</span>
-                    </Button>
-                    
                     <Button
                       variant="ghost"
                       size="sm"
@@ -487,6 +483,12 @@ export const CommunityFeed: React.FC = () => {
                       <span>{post.isConfirmed ? 'Đã xác nhận' : 'Xác nhận'}</span>
                     </Button>
                   </div>
+
+                  {/* Comments Section */}
+                  <CommentList 
+                    postId={post.id} 
+                    initialCommentsCount={post.comments}
+                  />
                 </CardContent>
               </Card>
             </motion.div>
