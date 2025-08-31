@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
+import RouteGuard from "@/components/auth/RouteGuard";
 
 export default function RootLayout() {
   const navigate = useNavigate();
@@ -41,7 +42,9 @@ export default function RootLayout() {
         onUserItemClick={handleUserItemClick}
       />
       <main className="min-h-screen">
-        <Outlet />
+        <RouteGuard>
+          <Outlet />
+        </RouteGuard>
       </main>
     </>
   );

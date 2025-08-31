@@ -13,6 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import MapSelector from './MapSelector';
 import CommentList from './CommentList';
+import { usePermissions } from '@/hooks/use-permissions';
+import { Permission } from '@/lib/auth/permissions';
+import { Link } from '@tanstack/react-router';
 
 
 
@@ -98,6 +101,7 @@ const mockPosts: CommunityPost[] = [
 export const CommunityFeed: React.FC = () => {
   const [posts, setPosts] = useState<CommunityPost[]>(mockPosts);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const { hasPermission } = usePermissions();
   const [newPost, setNewPost] = useState({
     content: '',
     location: '',
@@ -230,14 +234,15 @@ export const CommunityFeed: React.FC = () => {
           <p className="text-gray-600">Chia sẻ thông tin và hỗ trợ lẫn nhau</p>
         </div>
         
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-blue-500 hover:bg-blue-600">
-              <Plus className="h-4 w-4 mr-2" />
-              Đăng tin mới
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto z-50">
+        {hasPermission(Permission.CREATE_POST) ? (
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-500 hover:bg-blue-600">
+                <Plus className="h-4 w-4 mr-2" />
+                Đăng tin mới
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto z-50">
             <DialogHeader>
               <DialogTitle>Đăng tin mới</DialogTitle>
             </DialogHeader>
@@ -393,7 +398,15 @@ export const CommunityFeed: React.FC = () => {
               </div>
             </div>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        ) : (
+          <Link to="/auth/login">
+            <Button className="bg-blue-500 hover:bg-blue-600">
+              <Plus className="h-4 w-4 mr-2" />
+              Đăng nhập để đăng tin
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Posts Feed */}

@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PermissionsDemoRouteImport } from './routes/permissions-demo'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as EmergencyManagementRouteImport } from './routes/emergency-management'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -25,11 +24,6 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 
-const PermissionsDemoRoute = PermissionsDemoRouteImport.update({
-  id: '/permissions-demo',
-  path: '/permissions-demo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -108,7 +102,6 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
-  '/permissions-demo': typeof PermissionsDemoRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -125,7 +118,6 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
-  '/permissions-demo': typeof PermissionsDemoRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -143,7 +135,6 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/emergency-management': typeof EmergencyManagementRoute
   '/home': typeof HomeRoute
-  '/permissions-demo': typeof PermissionsDemoRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -162,7 +153,6 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
-    | '/permissions-demo'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -179,7 +169,6 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
-    | '/permissions-demo'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -196,7 +185,6 @@ export interface FileRouteTypes {
     | '/community'
     | '/emergency-management'
     | '/home'
-    | '/permissions-demo'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/signup'
@@ -214,7 +202,6 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   EmergencyManagementRoute: typeof EmergencyManagementRoute
   HomeRoute: typeof HomeRoute
-  PermissionsDemoRoute: typeof PermissionsDemoRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
@@ -227,13 +214,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/permissions-demo': {
-      id: '/permissions-demo'
-      path: '/permissions-demo'
-      fullPath: '/permissions-demo'
-      preLoaderRoute: typeof PermissionsDemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -342,7 +322,6 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   EmergencyManagementRoute: EmergencyManagementRoute,
   HomeRoute: HomeRoute,
-  PermissionsDemoRoute: PermissionsDemoRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
