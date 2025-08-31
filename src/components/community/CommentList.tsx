@@ -8,6 +8,9 @@ import { Comment } from '@/types';
 import { getCommentsByPostId, mockComments } from '@/lib/mock-data/comment-data';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
+import { usePermissions } from '@/hooks/use-permissions';
+import { Permission } from '@/lib/auth/permissions';
+import { Link } from '@tanstack/react-router';
 
 interface CommentListProps {
   postId: string;
@@ -23,6 +26,7 @@ export const CommentList: React.FC<CommentListProps> = ({
   const [comments, setComments] = useState<Comment[]>([]);
   const [showComments, setShowComments] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const { hasPermission } = usePermissions();
 
   // Load comments when component mounts or postId changes
   useEffect(() => {
@@ -195,22 +199,35 @@ export const CommentList: React.FC<CommentListProps> = ({
           >
             {/* Comment form */}
             <div className="mb-4">
-              {showCommentForm ? (
-                <CommentForm
-                  onSubmit={handleCommentSubmit}
-                  onCancel={() => setShowCommentForm(false)}
-                  placeholder="Viết bình luận..."
-                />
+              {hasPermission(Permission.COMMENT_POST) ? (
+                showCommentForm ? (
+                  <CommentForm
+                    onSubmit={handleCommentSubmit}
+                    onCancel={() => setShowCommentForm(false)}
+                    placeholder="Viết bình luận..."
+                  />
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start text-gray-500 hover:bg-gray-50"
+                    onClick={() => setShowCommentForm(true)}
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Viết bình luận...
+                  </Button>
+                )
               ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start text-gray-500 hover:bg-gray-50"
-                  onClick={() => setShowCommentForm(true)}
-                >
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Viết bình luận...
-                </Button>
+                <Link to="/auth/login" className="w-full">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start text-gray-500 hover:bg-gray-50"
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Đăng nhập để bình luận...
+                  </Button>
+                </Link>
               )}
             </div>
 

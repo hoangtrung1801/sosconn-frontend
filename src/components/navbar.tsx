@@ -35,6 +35,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Link } from "@tanstack/react-router";
+import useGlobalStore from "@/store/useGlobalStore";
+import { usePermissions } from "@/hooks/use-permissions";
+import { Permission } from "@/lib/auth/permissions";
 
 // Emergency Status Component
 const EmergencyStatus = ({
@@ -193,8 +197,8 @@ const NotificationMenu = ({
 
 // User Menu Component
 const UserMenu = ({
-  userName = "Emergency User",
-  userEmail = "user@emergency.vn",
+  userName,
+  userEmail,
   userAvatar,
   onItemClick,
 }: {
@@ -202,58 +206,88 @@ const UserMenu = ({
   userEmail?: string;
   userAvatar?: string;
   onItemClick?: (item: string) => void;
-}) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button
-        variant="ghost"
-        className="h-9 px-2 py-0 hover:bg-accent hover:text-accent-foreground"
-      >
-        <Avatar className="h-7 w-7">
-          <AvatarImage src={userAvatar} alt={userName} />
-          <AvatarFallback className="text-xs">
-            {userName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
-          </AvatarFallback>
-        </Avatar>
-        <ChevronDownIcon className="h-3 w-3 ml-1" />
-        <span className="sr-only">User menu</span>
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-56">
-      <DropdownMenuLabel>
-        <div className="flex flex-col space-y-1">
-          <p className="text-sm font-medium leading-none">{userName}</p>
-          <p className="text-xs leading-none text-muted-foreground">
-            {userEmail}
-          </p>
-        </div>
-      </DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => onItemClick?.("profile")}>
-        Profile
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => onItemClick?.("emergency-contacts")}>
-        Emergency Contacts
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => onItemClick?.("settings")}>
-        Settings
-      </DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => onItemClick?.("logout")}>
-        Log out
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
+}) => {
+  const { user, isAuthenticated, logout } = useGlobalStore();
+
+  const handleLogout = () => {
+    logout();
+    onItemClick?.("logout");
+  };
+
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="flex items-center gap-2">
+        <Link to="/auth/login">
+          <Button variant="ghost" size="sm">
+            Đăng nhập
+          </Button>
+        </Link>
+        <Link to="/auth/signup">
+          <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+            Đăng ký
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const displayName = userName || user.fullName || user.username;
+  const displayEmail = userEmail || user.email;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="h-9 px-2 py-0 hover:bg-accent hover:text-accent-foreground"
+        >
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={userAvatar || user.avatar} alt={displayName} />
+            <AvatarFallback className="text-xs">
+              {displayName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+          <ChevronDownIcon className="h-3 w-3 ml-1" />
+          <span className="sr-only">User menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{displayName}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {displayEmail}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => onItemClick?.("profile")}>
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onItemClick?.("emergency-contacts")}>
+          Emergency Contacts
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onItemClick?.("settings")}>
+          Settings
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout}>
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 // Types
 export interface NavbarNavItem {
   href?: string;
   label: string;
   icon?: React.ReactNode;
+  requiredPermission?: Permission;
 }
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
@@ -273,28 +307,38 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   onUserItemClick?: (item: string) => void;
 }
 
-// Default navigation links for emergency app
+// Default navigation links for emergency app with permissions
 const defaultNavigationLinks: NavbarNavItem[] = [
-  { href: "/home", label: "Dashboard", icon: <Home className="h-4 w-4" /> },
-  { href: "/citizen", label: "Citizen Portal", icon: <Shield className="h-4 w-4" /> },
+  { 
+    href: "/home", 
+    label: "Dashboard", 
+    icon: <Home className="h-4 w-4" />,
+    requiredPermission: Permission.VIEW_DASHBOARD,
+  },
+  { 
+    href: "/community", 
+    label: "Community", 
+    icon: <Users className="h-4 w-4" />,
+    requiredPermission: Permission.VIEW_COMMUNITY,
+  },
+  { 
+    href: "/citizen", 
+    label: "Citizen Portal", 
+    icon: <Shield className="h-4 w-4" />,
+    requiredPermission: Permission.VIEW_CITIZEN_PORTAL,
+  },
   {
     href: "/area-selection",
     label: "Emergency Management",
     icon: <AlertTriangle className="h-4 w-4" />,
+    requiredPermission: Permission.VIEW_EMERGENCY_MANAGEMENT,
   },
-  // { href: '/disaster-map', label: 'Disaster Map', icon: <MapPin className="h-4 w-4" /> },
   {
     href: "/eop/",
     label: "EOP Reports",
     icon: <FileText className="h-4 w-4" />,
+    requiredPermission: Permission.VIEW_EOP_REPORTS,
   },
-  {
-    href: "/community",
-    label: "Community",
-    icon: <Users className="h-4 w-4" />,
-  },
-  // { href: '/emergency-contacts', label: 'Emergency Contacts', icon: <Shield className="h-4 w-4" /> },
-  // { href: '/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -316,6 +360,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   ...props
 }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const { hasPermission } = usePermissions();
+  
+  // Filter navigation links based on user permissions
+  const filteredNavigationLinks = navigationLinks.filter(link => {
+    if (!link.requiredPermission) return true;
+    return hasPermission(link.requiredPermission);
+  });
 
   useEffect(() => {
     const checkWidth = () => {
@@ -375,7 +426,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <PopoverContent align="start" className="w-64 p-1">
                   <NavigationMenu className="max-w-none">
                     <NavigationMenuList className="flex-col items-start gap-0">
-                      {navigationLinks.map((link, index) => (
+                      {filteredNavigationLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
                           <button
                             onClick={(e) => {
@@ -413,7 +464,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {!isMobile && (
                 <NavigationMenu className="flex">
                   <NavigationMenuList className="gap-1">
-                    {navigationLinks.map((link, index) => (
+                    {filteredNavigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index}>
                         <NavigationMenuLink
                           href={link.href}
